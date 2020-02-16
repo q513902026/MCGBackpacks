@@ -1,18 +1,25 @@
 package me.renner6895.backpacks.objects;
 
-import org.bukkit.*;
-import me.renner6895.backpacks.*;
-import org.bukkit.configuration.*;
-import org.bukkit.configuration.file.*;
-import org.bukkit.entity.*;
+import me.renner6895.backpacks.InvUtil;
+import me.renner6895.backpacks.Main;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.*;
-
-import org.bukkit.inventory.*;
-
-import java.util.*;
-
-import org.bukkit.inventory.meta.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 public class Backpack {
     private Main plugin;
@@ -91,11 +98,13 @@ public class Backpack {
     }
 
     public ItemStack getItem() {
+
+        //noinspection deprecation
         ItemStack item = new ItemStack(this.getItemId(), 1, this.getItemData());
+
         final ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(this.getName());
         final List<String> lore = new ArrayList<String>();
-        lore.add(" ");
         lore.add("Bind-Player: " + Bukkit.getOfflinePlayer(this.getBindID()).getName());
         lore.add(ChatColor.translateAlternateColorCodes('&', "&7Slots: &c" + this.getSlots()));
         itemMeta.setLore(lore);

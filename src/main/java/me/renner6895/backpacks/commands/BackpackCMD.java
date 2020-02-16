@@ -1,20 +1,29 @@
 package me.renner6895.backpacks.commands;
 
-import me.renner6895.backpacks.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.bukkit.configuration.*;
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import me.renner6895.backpacks.Main;
+import me.renner6895.backpacks.objects.Backpack;
+import me.renner6895.backpacks.objects.BackpackHolder;
+import me.renner6895.backpacks.objects.PluginPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-
-import org.bukkit.inventory.*;
-import org.bukkit.*;
-import org.bukkit.configuration.file.*;
-
-import java.io.*;
-
-import me.renner6895.backpacks.objects.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.UUID;
 
 public class BackpackCMD implements CommandExecutor {
     private Main plugin;
@@ -67,8 +76,8 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final Player player = (Player) sender;
-                if (this.plugin.itemIsBackpack(player.getItemInHand())) {
-                    player.getItemInHand().setAmount(player.getItemInHand().getAmount() + 1);
+                if (this.plugin.itemIsBackpack(player.getInventory().getItemInMainHand())) {
+                    player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("clone.succuse", "&7The backpack item has been cloned!")));
                 } else {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("clone.error2", "&cYou must be holding a backpack for this to work!")));
@@ -87,7 +96,7 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final Player player = (Player) sender;
-                final ItemStack item = player.getItemInHand();
+                final ItemStack item = player.getInventory().getItemInMainHand();
                 if (!this.plugin.itemIsBackpack(item)) {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("rename.error3", "&cError: You must be holding the backpack in your hand to rename it.")));
                     return false;
@@ -98,7 +107,7 @@ public class BackpackCMD implements CommandExecutor {
                 backpack.updateName(name);
                 final ItemStack newBPItem = backpack.getItem();
                 newBPItem.setAmount(item.getAmount());
-                player.setItemInHand(newBPItem);
+                player.getInventory().setItemInMainHand(newBPItem);
                 sender.sendMessage(this.color(this.plugin.getPrefix() + String.format(this.getFormatText("rename.succuse", "&7Backpack renamed to %s &7."), name)));
                 return false;
             } else if (args[0].equalsIgnoreCase("delete")) {
@@ -110,7 +119,7 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final Player player = (Player) sender;
-                final ItemStack item = player.getItemInHand();
+                final ItemStack item = player.getInventory().getItemInMainHand();
                 if (this.plugin.itemIsBackpack(item)) {
                     final String backpackId2 = this.plugin.getNmsUtil().getStringTag(item, "backpack-item");
                     final Backpack backpack2 = this.plugin.getBackpack(UUID.fromString(backpackId2));
@@ -145,7 +154,7 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final Player player2 = (Player) sender;
-                final ItemStack item2 = player2.getItemInHand();
+                final ItemStack item2 = player2.getInventory().getItemInMainHand();
                 if (!this.plugin.itemIsBackpack(item2)) {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("reslot.error4", "&cError: You must be holding the backpack in your hand to reslot it.")));
                     return false;
@@ -155,7 +164,7 @@ public class BackpackCMD implements CommandExecutor {
                 backpack.updateSlots(page);
                 final ItemStack newBPItem = backpack.getItem();
                 newBPItem.setAmount(item2.getAmount());
-                player2.setItemInHand(newBPItem);
+                player2.getInventory().setItemInMainHand(newBPItem);
                 sender.sendMessage(this.color(this.plugin.getPrefix() + String.format(this.getFormatText("reslot.succuse", "&7Backpack reslotted to  %s slots&7."), page)));
                 return false;
             } else if (args[0].equalsIgnoreCase("find")) {
@@ -167,7 +176,11 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final String bindID = args[1];
-                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID).getBackpacks();
+                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID) ==null ? findOfflinePlayerBackpacks(bindID) : this.plugin.getPluginPlayer(bindID).getBackpacks();
+                if(backpacks.size() == 0 ){
+                    sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("find.error2", "&cError: You must be a vaild player name use this command.")));
+                    return false;
+                }
                 final List<String> list = Lists.newArrayList();
                 for (final Backpack backpack : backpacks) {
                     list.add("Name:{" + backpack.getName() + "} | UUID:{" + backpack.getUniqueId().toString() + "} | Slot:{" + backpack.getSlots() + "} ");
@@ -191,7 +204,11 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final String bindID = args[1];
-                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID).getBackpacks();
+                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID) ==null ? findOfflinePlayerBackpacks(bindID) : this.plugin.getPluginPlayer(bindID).getBackpacks();
+                if(backpacks.size() == 0 ){
+                    sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("view.error2", "&cError: You must be a vaild player name use this command.")));
+                    return false;
+                }
                 if (this.orderedPlayerBackpackMap == null || this.orderedPlayerBackpackMap.size() != backpacks.size()) {
                     this.orderedPlayerBackpackMap = new TreeMap<Double, Backpack>();
                     for (final Backpack bp : this.plugin.getBackpackMap().values()) {
@@ -381,6 +398,16 @@ public class BackpackCMD implements CommandExecutor {
             }
             return false;
         }
+    }
+
+    private List<Backpack> findOfflinePlayerBackpacks(String bindID) {
+        List<Backpack> backpacks = Lists.newArrayList();
+        for(Backpack backpack:plugin.getBackpackMap().values()){
+            if(backpack.getBindID().equals(bindID)){
+                backpacks.add(backpack);
+            }
+        }
+        return backpacks;
     }
 
     private boolean checkPermission(final String string, final CommandSender sender, final boolean sendMessage) {

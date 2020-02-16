@@ -1,3 +1,4 @@
+/build/
 # Compiled Lua sources
 luac.out
 
@@ -39,3 +40,7 @@ luac.out
 *.x86_64
 *.hex
 
+*.bin
+*.lock
+.gradle/5.2.1/gc.properties
+*.class

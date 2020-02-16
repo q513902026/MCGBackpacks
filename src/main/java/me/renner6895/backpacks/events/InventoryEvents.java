@@ -1,18 +1,23 @@
 package me.renner6895.backpacks.events;
 
-import me.renner6895.backpacks.*;
-import org.bukkit.inventory.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.player.*;
-import org.bukkit.event.block.*;
+import me.renner6895.backpacks.Main;
+import me.renner6895.backpacks.objects.Backpack;
+import me.renner6895.backpacks.objects.BackpackHolder;
+import me.renner6895.backpacks.objects.PluginPlayer;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
-import java.util.*;
-
-import org.bukkit.event.*;
-import me.renner6895.backpacks.objects.*;
-import org.bukkit.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.plugin.*;
+import java.util.UUID;
 
 public class InventoryEvents implements Listener {
     private Main plugin;
@@ -24,11 +29,20 @@ public class InventoryEvents implements Listener {
     private boolean checkOwner(final ItemStack item, final Player p) {
         return (p.hasPermission("backpacks.admin.viewall") | p.hasPermission("backpacks.admin.view")) || p.getName().equals(this.plugin.getNmsUtil().getStringTag(item, "backpack-owner"));
     }
-
+    private ItemStack getItemInHand(Player player,EquipmentSlot hand){
+        switch(hand){
+            case HAND:
+                return player.getInventory().getItemInMainHand();
+            case OFF_HAND:
+                return player.getInventory().getItemInOffHand();
+        }
+        return null;
+    }
     @EventHandler
     public void itemClickEvent(final PlayerInteractEvent e) {
-        if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) && e.getPlayer().getItemInHand() != null) {
-            final ItemStack item = e.getPlayer().getItemInHand();
+        if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) ) {
+            final ItemStack item = getItemInHand(e.getPlayer(),e.getHand());
+            if(item == null){return;}
             if (this.plugin.itemIsBackpack(item)) {
                 e.setCancelled(true);
                 final String backpackId = this.plugin.getNmsUtil().getStringTag(item, "backpack-item");

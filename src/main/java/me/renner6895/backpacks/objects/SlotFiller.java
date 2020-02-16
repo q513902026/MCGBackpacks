@@ -19,6 +19,7 @@ public class SlotFiller {
     }
 
     public void refresh() {
+        //noinspection deprecation
         this.item = new ItemStack(this.plugin.getConfig().getInt("slot-filler.item-id"), 1, (short) this.plugin.getConfig().getInt("slot-filler.item-data"));
         final ItemMeta itemMeta = this.item.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("slot-filler.name")));
