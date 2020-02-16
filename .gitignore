@@ -1,3 +1,4 @@
+# ingnore folder
 /build/
 # Compiled Lua sources
 luac.out
