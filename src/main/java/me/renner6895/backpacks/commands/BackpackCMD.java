@@ -185,7 +185,7 @@ public class BackpackCMD implements CommandExecutor {
                 for (final Backpack backpack : backpacks) {
                     list.add("Name:{" + backpack.getName() + "} | UUID:{" + backpack.getUniqueId().toString() + "} | Slot:{" + backpack.getSlots() + "} ");
                 }
-                sender.sendMessage(this.color("&3&m-----------------------------------------------------"));
+                sender.sendMessage(this.color(String.format("&3&m-----------------------%s&3&m---------------------------",bindID)));
                 for (final String message : list) {
                     sender.sendMessage(message);
                 }
@@ -208,10 +208,10 @@ public class BackpackCMD implements CommandExecutor {
                 if(backpacks.size() == 0 ){
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("view.error2", "&cError: You must be a vaild player name use this command.")));
                     return false;
-                }
+            }
                 if (this.orderedPlayerBackpackMap == null || this.orderedPlayerBackpackMap.size() != backpacks.size()) {
                     this.orderedPlayerBackpackMap = new TreeMap<Double, Backpack>();
-                    for (final Backpack bp : this.plugin.getBackpackMap().values()) {
+                    for (final Backpack bp : backpacks) {
                         double d = bp.getSlots();
                         for (boolean f = false; this.orderedPlayerBackpackMap.get(d) != null && !f; d += 0.001) {
                         }
