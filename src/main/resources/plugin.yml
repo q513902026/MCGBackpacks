@@ -1,0 +1,8 @@
+name: Backpacks
+version: 3.0.0
+author: renner6895
+main: me.renner6895.backpacks.Main
+commands:
+  backpack:
+  backpacks:
+  bp:
