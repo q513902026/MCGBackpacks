@@ -5,6 +5,7 @@ import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.BackpackHolder;
 import me.renner6895.backpacks.objects.PluginPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -88,6 +89,7 @@ public class InventoryEvents implements Listener {
             final BackpackHolder holder = (BackpackHolder) e.getInventory().getHolder();
             if (!holder.isViewAll()) {
                 final Backpack backpack = this.plugin.getBackpack(holder.getBackpackid());
+                e.getInventory().forEach(x->sendBackBackpackItemStack(x,e.getPlayer()));
                 this.plugin.getServer().getScheduler().runTask((Plugin) this.plugin, (Runnable) new Runnable() {
                     @Override
                     public void run() {
@@ -96,6 +98,13 @@ public class InventoryEvents implements Listener {
                 });
                 backpack.saveBackpack();
             }
+        }
+    }
+    private void sendBackBackpackItemStack(ItemStack item, HumanEntity p){
+        if (this.plugin.itemIsBackpack(item)){
+            ItemStack backItem = item.clone();
+            item.setAmount(0);
+            p.getInventory().addItem(backItem);
         }
     }
 }

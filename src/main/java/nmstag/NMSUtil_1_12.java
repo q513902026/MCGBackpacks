@@ -17,6 +17,11 @@ public class NMSUtil_1_12 implements NMSUtil {
         final net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return (nmsItem == null) ? null : nmsItem.getTag();
     }
+    @Override
+    public Object getTag(final ItemStack item,final String key) {
+        final net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        return nmsItem.getTag().getCompound(key);
+    }
 
     @Override
     public String getStringTag(final ItemStack item, final String str) {
@@ -40,6 +45,15 @@ public class NMSUtil_1_12 implements NMSUtil {
     public boolean getBooleanTag(final ItemStack item, final String str) {
         final net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem.getTag().getBoolean(str);
+    }
+
+    @Override
+    public ItemStack setTag(ItemStack p0, String key,NBTTagCompound tag) {
+        final net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(p0);
+        final NBTTagCompound nbtag = nmsItem.getTag();
+        nbtag.set(key, tag);
+        nmsItem.setTag(nbtag);
+        return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
     @Override
@@ -77,4 +91,5 @@ public class NMSUtil_1_12 implements NMSUtil {
         nmsItem.setTag(tag);
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
+
 }

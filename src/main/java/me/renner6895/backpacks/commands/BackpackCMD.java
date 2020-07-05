@@ -204,20 +204,17 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final String bindID = args[1];
-                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID) ==null ? findOfflinePlayerBackpacks(bindID) : this.plugin.getPluginPlayer(bindID).getBackpacks();
+                if (this.plugin.getPluginPlayer(bindID) ==null){
+                    sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("view.error3", "&cError: player must be online.")));
+                    return false;
+                }
+                PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(bindID);
+                final List<Backpack> backpacks =  pluginPlayer.getBackpacks();
                 if(backpacks.size() == 0 ){
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("view.error2", "&cError: You must be a vaild player name use this command.")));
                     return false;
-            }
-                if (this.orderedPlayerBackpackMap == null || this.orderedPlayerBackpackMap.size() != backpacks.size()) {
-                    this.orderedPlayerBackpackMap = new TreeMap<Double, Backpack>();
-                    for (final Backpack bp : backpacks) {
-                        double d = bp.getSlots();
-                        for (boolean f = false; this.orderedPlayerBackpackMap.get(d) != null && !f; d += 0.001) {
-                        }
-                        this.orderedPlayerBackpackMap.put(d, bp);
-                    }
                 }
+                pluginPlayer.updateBackpackList();
                 int page2 = 1;
                 if (args.length > 2) {
                     try {
@@ -225,16 +222,7 @@ public class BackpackCMD implements CommandExecutor {
                     } catch (NumberFormatException ex) {
                     }
                 }
-                final Inventory inv = Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, this.color(String.format(this.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2)));
-                int counter = 0;
-                for (final Backpack backpack3 : this.orderedPlayerBackpackMap.values()) {
-                    if (counter >= (page2 - 1) * 54 && counter < page2 * 54) {
-                        inv.addItem(new ItemStack[]{backpack3.getItem()});
-                    }
-                    if (++counter >= page2 * 54) {
-                        break;
-                    }
-                }
+                final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, this.color(String.format(this.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))),page2);
                 ((Player) sender).openInventory(inv);
                 return false;
             } else {

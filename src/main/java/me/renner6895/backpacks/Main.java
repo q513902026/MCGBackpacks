@@ -1,25 +1,30 @@
 package me.renner6895.backpacks;
 
-import org.bukkit.plugin.java.*;
-import me.renner6895.backpacks.objects.*;
-import org.bukkit.*;
-import nmstag.*;
+import me.renner6895.backpacks.commands.BackpackCMD;
+import me.renner6895.backpacks.events.CraftingEvents;
+import me.renner6895.backpacks.events.InventoryEvents;
+import me.renner6895.backpacks.events.JoinLeaveEvents;
+import me.renner6895.backpacks.objects.Backpack;
+import me.renner6895.backpacks.objects.PluginPlayer;
+import me.renner6895.backpacks.objects.SlotFiller;
+import nmstag.NMSUtil;
+import nmstag.NMSUtil_1_12;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
-
-import org.bukkit.entity.*;
-
-import java.io.*;
-
-import org.bukkit.event.*;
-import me.renner6895.backpacks.events.*;
-import org.bukkit.plugin.*;
-import me.renner6895.backpacks.commands.*;
-import org.bukkit.command.*;
-import org.bukkit.inventory.*;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Main extends JavaPlugin {
-    private Main plugin;
+    private static Main plugin;
     private NMSUtil nmsUtil;
     private String pluginName;
     private Map<UUID, Backpack> backpackMap;
@@ -217,4 +222,5 @@ public class Main extends JavaPlugin {
     public Map<UUID, Backpack> getBackpackMap() {
         return this.backpackMap;
     }
+    public static Main INSTANCE (){return plugin;};
 }
