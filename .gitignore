@@ -45,3 +45,5 @@ luac.out
 *.lock
 .gradle/5.2.1/gc.properties
 *.class
+*.jar
+*.iml
