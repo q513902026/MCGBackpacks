@@ -1,10 +1,10 @@
 package me.renner6895.backpacks.objects;
 
-import me.renner6895.backpacks.*;
+import me.renner6895.backpacks.Main;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
-import java.util.*;
-
-import org.bukkit.inventory.*;
+import java.util.UUID;
 
 public class BackpackHolder implements InventoryHolder {
     private Main plugin;

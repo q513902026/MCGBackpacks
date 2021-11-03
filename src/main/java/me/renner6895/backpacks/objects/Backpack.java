@@ -46,9 +46,12 @@ public class Backpack {
         this.itemData = ((fileConfig.get("item-data") == null) ? Main.defaultItemData : ((short) fileConfig.getInt("item-data")));
         this.Backpack_ID = UUID.fromString(this.file.getName().substring(0, this.file.getName().length() - 4));
         this.User_ID = fileConfig.getString("bind-id");
+    }
+
+    private void loadInv(ConfigurationSection fileConfig) {
         this.inventory = Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, this.Backpack_ID), 54, ChatColor.translateAlternateColorCodes('&', this.getName()));
         try {
-            this.inventory.setContents(InvUtil.loadInventory((ConfigurationSection) fileConfig));
+            this.inventory.setContents(InvUtil.loadInventory(fileConfig));
         } catch (InvalidConfigurationException | IllegalArgumentException ex4) {
 
             ex4.printStackTrace();
@@ -58,6 +61,11 @@ public class Backpack {
         }
     }
 
+    public void load(){
+        if (inventory == null){
+            loadInv(YamlConfiguration.loadConfiguration(this.file));
+        }
+    }
     public void clearViewers() {
         if (this.getInventory() != null) {
             final Iterator<HumanEntity> hei = this.getInventory().getViewers().iterator();
@@ -83,11 +91,13 @@ public class Backpack {
         final FileConfiguration fileConfig = (FileConfiguration) YamlConfiguration.loadConfiguration(this.file);
         fileConfig.set("name", (Object) this.name);
         fileConfig.set("slots", (Object) this.getSlots());
+        if (this.inventory !=null){
         InvUtil.saveInventory(this.inventory, (ConfigurationSection) fileConfig, this.getSlots());
         try {
             fileConfig.save(this.file);
         } catch (IOException var3) {
             var3.printStackTrace();
+        }
         }
     }
 
@@ -162,7 +172,6 @@ public class Backpack {
         this.initialize();
         this.slots = slots;
     }
-
     public short getItemData() {
         return this.itemData;
     }

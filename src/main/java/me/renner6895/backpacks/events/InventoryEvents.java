@@ -5,6 +5,8 @@ import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.BackpackHolder;
 import me.renner6895.backpacks.objects.PluginPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -104,7 +106,14 @@ public class InventoryEvents implements Listener {
         if (this.plugin.itemIsBackpack(item)){
             ItemStack backItem = item.clone();
             item.setAmount(0);
-            p.getInventory().addItem(backItem);
+            if(p.getInventory().firstEmpty() == -1){
+                World world = p.getWorld();
+                final Location loc = p.getLocation().clone();
+                world.dropItem(loc,backItem);
+            }else
+            {
+                p.getInventory().addItem(backItem);
+            }
         }
     }
 }

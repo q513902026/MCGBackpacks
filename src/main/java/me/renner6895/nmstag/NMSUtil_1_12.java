@@ -1,4 +1,4 @@
-package nmstag;
+package me.renner6895.nmstag;
 
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;

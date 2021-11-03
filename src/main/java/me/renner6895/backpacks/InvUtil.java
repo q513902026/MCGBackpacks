@@ -57,8 +57,10 @@ public class InvUtil {
         for (int i = 0; i < inventory.getSize() && i + 1 <= slotsToSave; ++i) {
             final ItemStack item = inventory.getItem(i);
             destination.set(Integer.toString(i), item);
+            /**
                 String nbtstr = getNBTString(item);
                 destination.set(Integer.toString(i) + "BlockEntityTag", nbtstr);
+             **/
 
         }
     }
@@ -83,8 +85,10 @@ public class InvUtil {
                     stacks.add(null);
                 }
                 ItemStack item = source.getItemStack(key);
+                /**
                 String nbtstr = source.getString(key+"BlockEntityTag");
                 item = setNBTString(nbtstr, item);
+                **/
                 stacks.set(number, item);
             }
         } catch (NumberFormatException var4) {

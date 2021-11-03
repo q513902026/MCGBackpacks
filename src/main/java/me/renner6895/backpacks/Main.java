@@ -7,8 +7,8 @@ import me.renner6895.backpacks.events.JoinLeaveEvents;
 import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.PluginPlayer;
 import me.renner6895.backpacks.objects.SlotFiller;
-import nmstag.NMSUtil;
-import nmstag.NMSUtil_1_12;
+import me.renner6895.nmstag.NMSUtil;
+import me.renner6895.nmstag.NMSUtil_1_12;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ import java.util.UUID;
 public class Main extends JavaPlugin {
     private static Main plugin;
     private NMSUtil nmsUtil;
-    private String pluginName;
+    private final String pluginName;
     private Map<UUID, Backpack> backpackMap;
     private Map<String, PluginPlayer> playerMap;
     public static SlotFiller slotFiller;
@@ -40,6 +40,7 @@ public class Main extends JavaPlugin {
     }
 
     public void onDisable() {
+        this.log("Save Backpacks......");
         for (final Backpack backpack : this.backpackMap.values()) {
             backpack.clearViewers();
             backpack.saveBackpack();
@@ -59,7 +60,9 @@ public class Main extends JavaPlugin {
             this.registerConfig();
             this.registerEvents();
             this.registerCommands();
+            long lastTime = System.currentTimeMillis();
             this.registerBackpacks();
+            this.log("Register Backpacks Time-Consuming: "+ (System.currentTimeMillis() - lastTime) + " ms");
             this.registerPlayers();
         }
     }
@@ -78,6 +81,7 @@ public class Main extends JavaPlugin {
     }
 
     private void registerPlayers() {
+        this.log("Update PluginPlayers...");
         this.playerMap = new HashMap<String, PluginPlayer>();
         for (final Player player : Bukkit.getOnlinePlayers()) {
             this.registerPlayer(new PluginPlayer(player));
@@ -85,18 +89,19 @@ public class Main extends JavaPlugin {
     }
 
     private void registerBackpacks() {
+        this.log("Update Backpacks...");
         Main.slotFiller = new SlotFiller(this.plugin);
         Main.defaultName = this.plugin.getConfig().getString("default-backpack.name");
         Main.defaultSlots = this.plugin.getConfig().getInt("default-backpack.slots");
         Main.defaultItemId = this.plugin.getConfig().getInt("default-backpack.item-id");
         Main.defaultItemData = (byte) this.plugin.getConfig().getInt("default-backpack.item-data");
         this.backpackMap = new HashMap<UUID, Backpack>();
-        File[] var4;
-        for (int var3 = (var4 = new File(this.plugin.getDataFolder() + File.separator + "backpacks").listFiles()).length, var5 = 0; var5 < var3; ++var5) {
-            final File file = var4[var5];
-            final Backpack b = new Backpack(file, this.plugin);
-            this.backpackMap.put(b.getUniqueId(), b);
+        for(File file : new File(this.plugin.getDataFolder() + File.separator + "backpacks").listFiles()){
+            Backpack bp = new Backpack(file,plugin);
+            this.backpackMap.put(bp.getUniqueId(),bp);
         }
+        this.log("Backpack Size: "+this.backpackMap.size());
+
     }
 
     private void registerFiles() {
@@ -168,7 +173,13 @@ public class Main extends JavaPlugin {
     }
 
     public Backpack getBackpack(final UUID uuid) {
-        return this.backpackMap.get(uuid);
+        Backpack bp = this.backpackMap.get(uuid);
+        bp.load();
+        return bp;
+    }
+
+    private File getBackpackFileByUUID(UUID uuid) {
+        return new File(this.plugin.getDataFolder() + File.separator + "backpacks", uuid + ".yml");
     }
 
     public void registerBackpack(final Backpack backpack) {
