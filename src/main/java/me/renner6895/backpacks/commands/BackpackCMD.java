@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -224,6 +225,16 @@ public class BackpackCMD implements CommandExecutor {
                 }
                 final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, this.color(String.format(this.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))),page2);
                 ((Player) sender).openInventory(inv);
+                Main.INSTANCE().log("玩家<"+sender.getName()+"> 正在查询玩家<"+bindID+">的所有背包");
+                return false;
+            }else if (args[0].equalsIgnoreCase("rebuildCache")){
+                if (!this.checkPermission("backpacks.admin.view", sender, true)) {
+                    return false;
+                }
+                if (sender instanceof ConsoleCommandSender){
+                    this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin,() ->Main.INSTANCE().buildCache());
+                    this.plugin.log("正在异步建立缓存...");
+                }
                 return false;
             } else {
                 if (!args[0].equalsIgnoreCase("viewall")) {
@@ -263,6 +274,7 @@ public class BackpackCMD implements CommandExecutor {
                     }
                 }
                 ((Player) sender).openInventory(inv2);
+                Main.INSTANCE().log("玩家<"+sender.getName()+"> 发起了查询所有背包的命令");
                 return false;
             }
         } else {
@@ -302,6 +314,9 @@ public class BackpackCMD implements CommandExecutor {
                 if (sender.hasPermission("backpacks.admin.view")) {
                     list2.add(this.color("&3/backpack view {player} <page>"));
                     list2.add(this.color("&7/backpack help view"));
+                }
+                if (sender instanceof ConsoleCommandSender){
+                    list2.add(this.color("&3/backpack rebuildCache"));
                 }
                 list2.add(this.color("&3&m-----------------------------------------------------"));
                 for (final String s : list2) {
@@ -466,6 +481,7 @@ public class BackpackCMD implements CommandExecutor {
             var13.printStackTrace();
         }
         final Backpack backpack = new Backpack(file, this.plugin);
+        backpack.load();
         final PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(id);
         this.plugin.registerBackpack(backpack);
         pluginPlayer.addBackpack(backpack);

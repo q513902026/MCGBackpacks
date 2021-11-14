@@ -91,7 +91,7 @@ public class InventoryEvents implements Listener {
             final BackpackHolder holder = (BackpackHolder) e.getInventory().getHolder();
             if (!holder.isViewAll()) {
                 final Backpack backpack = this.plugin.getBackpack(holder.getBackpackid());
-                e.getInventory().forEach(x->sendBackBackpackItemStack(x,e.getPlayer()));
+                e.getInventory().forEach(x-> sendBackpackItemStack(x,e.getPlayer()));
                 this.plugin.getServer().getScheduler().runTask((Plugin) this.plugin, (Runnable) new Runnable() {
                     @Override
                     public void run() {
@@ -102,7 +102,8 @@ public class InventoryEvents implements Listener {
             }
         }
     }
-    private void sendBackBackpackItemStack(ItemStack item, HumanEntity p){
+
+    private void sendBackpackItemStack(ItemStack item, HumanEntity p){
         if (this.plugin.itemIsBackpack(item)){
             ItemStack backItem = item.clone();
             item.setAmount(0);

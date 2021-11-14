@@ -57,11 +57,6 @@ public class InvUtil {
         for (int i = 0; i < inventory.getSize() && i + 1 <= slotsToSave; ++i) {
             final ItemStack item = inventory.getItem(i);
             destination.set(Integer.toString(i), item);
-            /**
-                String nbtstr = getNBTString(item);
-                destination.set(Integer.toString(i) + "BlockEntityTag", nbtstr);
-             **/
-
         }
     }
 

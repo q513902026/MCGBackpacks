@@ -1,5 +1,6 @@
 package me.renner6895.backpacks;
 
+import com.google.common.base.Charsets;
 import me.renner6895.backpacks.commands.BackpackCMD;
 import me.renner6895.backpacks.events.CraftingEvents;
 import me.renner6895.backpacks.events.InventoryEvents;
@@ -11,6 +12,8 @@ import me.renner6895.nmstag.NMSUtil;
 import me.renner6895.nmstag.NMSUtil_1_12;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +22,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +35,8 @@ public class Main extends JavaPlugin {
     private final String pluginName;
     private Map<UUID, Backpack> backpackMap;
     private Map<String, PluginPlayer> playerMap;
+    private FileConfiguration backpackCache ;
+    private File backpackCacheFile;
     public static SlotFiller slotFiller;
     public static String defaultName;
     public static int defaultSlots;
@@ -41,10 +49,14 @@ public class Main extends JavaPlugin {
 
     public void onDisable() {
         this.log("Save Backpacks......");
+        long lastTime = System.currentTimeMillis();
         for (final Backpack backpack : this.backpackMap.values()) {
-            backpack.clearViewers();
-            backpack.saveBackpack();
+            if (backpack.isInit() && backpack.hasViewer()) {
+                backpack.clearViewers();
+                backpack.saveBackpack();
+            }
         }
+        this.log("Saving Backpacks Time-Consuming: "+ (System.currentTimeMillis() - lastTime) + " ms");
         for (final PluginPlayer pluginPlayer : this.playerMap.values()) {
             pluginPlayer.removal();
         }
@@ -58,6 +70,7 @@ public class Main extends JavaPlugin {
         } else {
             this.registerFiles();
             this.registerConfig();
+            this.registerCache();
             this.registerEvents();
             this.registerCommands();
             long lastTime = System.currentTimeMillis();
@@ -101,7 +114,6 @@ public class Main extends JavaPlugin {
             this.backpackMap.put(bp.getUniqueId(),bp);
         }
         this.log("Backpack Size: "+this.backpackMap.size());
-
     }
 
     private void registerFiles() {
@@ -112,6 +124,49 @@ public class Main extends JavaPlugin {
         }
     }
 
+
+    private void reloadCache(){
+        final InputStream defConfigStream = this.getResource("cache.yml");
+        if (defConfigStream == null){
+            return;
+        }
+        backpackCache.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+    }
+    /**
+     * 必须在registerBackpack之前运行
+     * 用于加载存储的背包拥有者信息
+     */
+    private void registerCache(){
+        backpackCacheFile = new File(this.getDataFolder(),"cache.yml");
+        if (backpackCache == null){
+            this.log("加载 背包缓存 ...");
+            backpackCache = YamlConfiguration.loadConfiguration(backpackCacheFile);
+            reloadCache();
+        }
+    }
+    public void cacheBackpackInfo(String UUID,String bindID){
+        backpackCache.set(UUID,bindID);
+        try {
+            backpackCache.save(backpackCacheFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String getBackpackBindCache(String UUID){
+        return backpackCache.getString(UUID);
+    }
+    public boolean hasBackpackCache(String UUID){
+        return backpackCache.contains(UUID);
+    }
+    public void buildCache() {
+        int index = 0;
+        for (final Map.Entry<UUID, Backpack> entry : this.backpackMap.entrySet()) {
+            entry.getValue().load();
+            cacheBackpackInfo(entry.getKey().toString(),entry.getValue().getBindID());
+            index += 1;
+        }
+        this.log("缓存建立完成,数量:"+ index);
+    }
     private void registerConfig() {
         if (this.plugin.getConfig().get("restore-defaults") == null || this.plugin.getConfig().getBoolean("restore-defaults")) {
             this.plugin.getConfig().set("restore-defaults", (Object) false);
@@ -174,7 +229,9 @@ public class Main extends JavaPlugin {
 
     public Backpack getBackpack(final UUID uuid) {
         Backpack bp = this.backpackMap.get(uuid);
-        bp.load();
+        if (!bp.isInit()) {
+            bp.load();
+        }
         return bp;
     }
 
@@ -234,4 +291,6 @@ public class Main extends JavaPlugin {
         return this.backpackMap;
     }
     public static Main INSTANCE (){return plugin;};
+
+
 }
