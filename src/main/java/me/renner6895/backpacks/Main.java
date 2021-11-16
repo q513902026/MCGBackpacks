@@ -173,11 +173,14 @@ public class Main extends JavaPlugin {
     public void buildCache() {
         int index = 0;
         int maxLength = this.backpackMap.size();
-        double perc = 0.0D;
+        double perc;
+        int phase;
+        int lastPhase = 0;
         for (final Map.Entry<UUID, Backpack> entry : this.backpackMap.entrySet()) {
-            perc = (index * 100 / maxLength);
-            if (perc%20 == 0){
-                this.log("缓存建立进度:"+perc+"%....");
+            perc = ((double)index / (double)maxLength) * 100;
+            if ( ( phase = (int) (perc/8)) > lastPhase){
+                lastPhase = phase;
+                this.log(String.format("正在建立缓存,当前进度(%d/%d) - %d%% ...",index,maxLength,(int)perc));
             }
             entry.getValue().load();
             cacheBackpackInfo(entry.getKey().toString(),entry.getValue().getBindID(),true);

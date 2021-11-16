@@ -31,11 +31,13 @@ public class Backpack {
     private short itemData;
     private Inventory inventory;
     private FileConfiguration fileConfig;
+    private boolean isAdminBackpack;
     public Backpack(final File file, final Main plugin) {
         this.file = file;
         this.plugin = plugin;
         this.Backpack_ID = UUID.fromString(this.file.getName().substring(0, this.file.getName().length() - 4));
         this.User_ID = Main.INSTANCE().hasBackpackCache(this.Backpack_ID.toString()) ? Main.INSTANCE().getBackpackBindCache(this.Backpack_ID.toString()) : null;
+        this.isAdminBackpack = false;
     }
 
     private void initialize() {
@@ -46,6 +48,7 @@ public class Backpack {
             this.itemId = ((fileConfig.get("item-id") == null) ? Main.defaultItemId : fileConfig.getInt("item-id"));
             this.itemData = ((fileConfig.get("item-data") == null) ? Main.defaultItemData : ((short) fileConfig.getInt("item-data")));
             this.User_ID = fileConfig.getString("bind-id");
+            this.isAdminBackpack = (this.User_ID == null);
         } catch (NullPointerException e) {
             Main.INSTANCE().log(this.file.getName() + "载入时发生了错误,可能是错误的保存物品导致的");
         }
@@ -226,9 +229,13 @@ public class Backpack {
     }
 
     public String getBindID() {
-        if (this.User_ID == null) {
+        if (this.User_ID == null && !this.isAdminBackpack) {
             final FileConfiguration fileConfig = getFileConfig();
             this.User_ID = fileConfig.getString("bind-id");
+            if (this.User_ID == null){
+                this.isAdminBackpack = true;
+                return null;
+            }
             Main.INSTANCE().cacheBackpackInfo(this.Backpack_ID.toString(), this.User_ID);
         }
         return this.User_ID;
