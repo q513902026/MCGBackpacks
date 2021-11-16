@@ -32,11 +32,12 @@ public class InventoryEvents implements Listener {
     private boolean checkOwner(final ItemStack item, final Player p) {
         boolean hasOwner = this.plugin.getNmsUtil().hasKey(item,"backpack-owner");
         boolean isAdmin = (p.hasPermission("backpacks.admin.viewall") | p.hasPermission("backpacks.admin.view"));
-        if (!hasOwner){
-            return isAdmin;
-        }else{
+        if (hasOwner){
             boolean isOwner = p.getName().equals(this.plugin.getNmsUtil().getStringTag(item, "backpack-owner"));
             return (isAdmin || isOwner);
+
+        }else{
+            return isAdmin;
         }
     }
     private ItemStack getItemInHand(Player player,EquipmentSlot hand){
