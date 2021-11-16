@@ -30,7 +30,7 @@ public class Backpack {
     private int itemId;
     private short itemData;
     private Inventory inventory;
-
+    private FileConfiguration fileConfig;
     public Backpack(final File file, final Main plugin) {
         this.file = file;
         this.plugin = plugin;
@@ -40,7 +40,7 @@ public class Backpack {
 
     private void initialize() {
         try {
-            final FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(this.file);
+            fileConfig = getFileConfig();
             this.name = ((fileConfig.get("name") == null) ? Main.defaultName : fileConfig.getString("name"));
             this.slots = ((fileConfig.get("slots") == null) ? Main.defaultSlots : fileConfig.getInt("slots"));
             this.itemId = ((fileConfig.get("item-id") == null) ? Main.defaultItemId : fileConfig.getInt("item-id"));
@@ -52,8 +52,7 @@ public class Backpack {
     }
 
     private void loadInv(ConfigurationSection fileConfig) {
-        this.initialize();
-        this.inventory = Bukkit.createInventory(new BackpackHolder(this.plugin, this.Backpack_ID), 54, ChatColor.translateAlternateColorCodes('&', this.getName()));
+        this.inventory = Bukkit.createInventory(new BackpackHolder(this.plugin, this.Backpack_ID), 54, getRawName());
         try {
             this.inventory.setContents(InvUtil.loadInventory(fileConfig));
         } catch (InvalidConfigurationException | IllegalArgumentException ex4) {
@@ -67,7 +66,8 @@ public class Backpack {
 
     public void load() {
         if (inventory == null) {
-            loadInv(YamlConfiguration.loadConfiguration(this.file));
+            initialize();
+            loadInv(getFileConfig());
         }
     }
 
@@ -104,7 +104,7 @@ public class Backpack {
     public void saveBackpack() {
 
         if (isInit()) {
-            final FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(this.file);
+            final FileConfiguration fileConfig = getFileConfig();
             fileConfig.set("name", this.name);
             fileConfig.set("slots", this.getSlots());
             InvUtil.saveInventory(this.inventory, fileConfig, this.getSlots());
@@ -132,11 +132,16 @@ public class Backpack {
         final ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(this.getName());
         final List<String> lore = new ArrayList<String>();
-        lore.add("Bind-Player: " + Bukkit.getOfflinePlayer(this.getBindID()).getName());
+        lore.add("Bind-Player: " + this.getBindID());
         lore.add(ChatColor.translateAlternateColorCodes('&', "&7Slots: &c" + this.getSlots()));
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
         item = this.plugin.getNmsUtil().setStringTag(item, "backpack-item", this.getUniqueId().toString());
+
+        if (this.getBindID() == null){
+            return item;
+        }
+
         item = this.plugin.getNmsUtil().setStringTag(item, "backpack-owner", this.getBindID());
         return item;
     }
@@ -146,14 +151,12 @@ public class Backpack {
     }
 
     public String getName() {
-        return ChatColor.translateAlternateColorCodes('&', this.name);
+        return ChatColor.translateAlternateColorCodes('&',this.getRawName());
     }
 
     public void updateName(final String name) {
-
-
         this.clearViewers();
-        final FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(this.file);
+        final FileConfiguration fileConfig = getFileConfig();
         fileConfig.set("name", name);
         fileConfig.set("slots", this.getSlots());
         InvUtil.saveInventory(this.inventory, fileConfig, this.getSlots());
@@ -164,15 +167,10 @@ public class Backpack {
         }
         this.initialize();
         this.name = name;
-
     }
 
     public Backpack getBackpackForName(final String name) {
-        if (this.User_ID == null) {
-            final FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(this.file);
-            this.User_ID = fileConfig.getString("bind-id");
-            Main.INSTANCE().cacheBackpackInfo(this.Backpack_ID.toString(), this.User_ID);
-        }
+
         if (name.equals(this.getBindID())) {
             return this;
         }
@@ -185,8 +183,8 @@ public class Backpack {
 
     public void updateSlots(final int slots) {
         this.clearViewers();
-        final FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(this.file);
-        fileConfig.set("name", this.name);
+        final FileConfiguration fileConfig = getFileConfig();
+        fileConfig.set("name", getRawName());
         fileConfig.set("slots", slots);
         InvUtil.saveInventory(this.inventory, fileConfig, this.getSlots());
         try {
@@ -196,6 +194,14 @@ public class Backpack {
         }
         this.initialize();
         this.slots = slots;
+    }
+
+    private String getRawName() {
+        if (!isInit()){
+            final FileConfiguration fileConfig = getFileConfig();
+            this.name = ((fileConfig.get("name") == null) ? Main.defaultName : fileConfig.getString("name"));
+        }
+        return this.name;
     }
 
     public short getItemData() {
@@ -211,6 +217,24 @@ public class Backpack {
     }
 
     public String getBindID() {
+        if (this.User_ID == null) {
+            final FileConfiguration fileConfig = getFileConfig();
+            this.User_ID = fileConfig.getString("bind-id");
+            Main.INSTANCE().cacheBackpackInfo(this.Backpack_ID.toString(), this.User_ID);
+        }
         return this.User_ID;
+    }
+    public FileConfiguration getFileConfig(){
+        return getFileConfig(false);
+    }
+    public FileConfiguration getFileConfig(boolean reload){
+        if (reload){
+            fileConfig = YamlConfiguration.loadConfiguration(this.file);
+        }else{
+            if (fileConfig == null){
+                fileConfig = getFileConfig(true);
+            }
+        }
+        return fileConfig;
     }
 }

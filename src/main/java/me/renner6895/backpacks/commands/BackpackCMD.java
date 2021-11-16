@@ -405,7 +405,7 @@ public class BackpackCMD implements CommandExecutor {
 
     private List<Backpack> findOfflinePlayerBackpacks(String bindID) {
         List<Backpack> backpacks = Lists.newArrayList();
-        for(Backpack backpack:plugin.getBackpackMap().values()){
+        for(Backpack backpack: plugin.getBackpackMap().values()){
             if(backpack.getBindID().equals(bindID)){
                 backpacks.add(backpack);
             }

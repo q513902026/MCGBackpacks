@@ -50,12 +50,15 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         this.log("Save Backpacks......");
         long lastTime = System.currentTimeMillis();
+        int length = 0;
         for (final Backpack backpack : this.backpackMap.values()) {
             if (backpack.isInit() && backpack.hasViewer()) {
                 backpack.clearViewers();
                 backpack.saveBackpack();
+                length += 1;
             }
         }
+        this.log("Saving Backpacks Size: "+ length);
         this.log("Saving Backpacks Time-Consuming: "+ (System.currentTimeMillis() - lastTime) + " ms");
         for (final PluginPlayer pluginPlayer : this.playerMap.values()) {
             pluginPlayer.removal();
@@ -145,13 +148,22 @@ public class Main extends JavaPlugin {
         }
     }
     public void cacheBackpackInfo(String UUID,String bindID){
+        cacheBackpackInfo(UUID,bindID,false);
+    }
+    public void cacheBackpackInfo(String UUID,String bindID,boolean skipSave){
         backpackCache.set(UUID,bindID);
+        if (skipSave){return;}
+        saveBackpackCache();
+    }
+
+    private void saveBackpackCache() {
         try {
             backpackCache.save(backpackCacheFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public String getBackpackBindCache(String UUID){
         return backpackCache.getString(UUID);
     }
@@ -160,11 +172,19 @@ public class Main extends JavaPlugin {
     }
     public void buildCache() {
         int index = 0;
+        int maxLength = this.backpackMap.size();
+        double perc = 0.0D;
         for (final Map.Entry<UUID, Backpack> entry : this.backpackMap.entrySet()) {
+            perc = ((double)index / (double)maxLength) * 100;
+            if (perc%20 == 0){
+                this.log("缓存建立进度:"+perc+"%....");
+            }
             entry.getValue().load();
-            cacheBackpackInfo(entry.getKey().toString(),entry.getValue().getBindID());
+            cacheBackpackInfo(entry.getKey().toString(),entry.getValue().getBindID(),true);
             index += 1;
+
         }
+        saveBackpackCache();
         this.log("缓存建立完成,数量:"+ index);
     }
     private void registerConfig() {

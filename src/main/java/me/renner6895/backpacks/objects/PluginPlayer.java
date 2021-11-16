@@ -58,6 +58,7 @@ public class PluginPlayer {
     }
 
     public List<Backpack> getBackpacks() {
+        updateBackpackList();
         return this.backpacks;
     }
 
