@@ -96,7 +96,12 @@ public class Backpack {
         this.clearViewers();
         this.initialize();
     }
-
+    public static boolean isOwner(Backpack backpack,String name){
+        if(backpack.getBindID() == null){
+            return false;
+        }
+        return backpack.getBindID().equals(name);
+    }
     public Inventory getPackInventory() {
         return this.inventory;
     }
@@ -178,6 +183,10 @@ public class Backpack {
     }
 
     public int getSlots() {
+        if(this.slots  == 0){
+            final FileConfiguration fileConfig = getFileConfig();
+            this.slots = ((fileConfig.get("slots") == null) ? Main.defaultSlots : fileConfig.getInt("slots"));
+        }
         return this.slots;
     }
 

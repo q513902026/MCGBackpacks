@@ -175,7 +175,7 @@ public class Main extends JavaPlugin {
         int maxLength = this.backpackMap.size();
         double perc = 0.0D;
         for (final Map.Entry<UUID, Backpack> entry : this.backpackMap.entrySet()) {
-            perc = ((double)index / (double)maxLength) * 100;
+            perc = (index * 100 / maxLength);
             if (perc%20 == 0){
                 this.log("缓存建立进度:"+perc+"%....");
             }
