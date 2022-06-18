@@ -14,7 +14,6 @@ import me.renner6895.backpacks.objects.SlotFiller;
 import me.renner6895.nmstag.NMSUtil;
 import me.renner6895.nmstag.NMSUtil_1_12;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -359,7 +358,7 @@ public class Main extends JavaPlugin {
     }
 
     private void registerBeans() {
-        injector = new InjectorBuilder().setPlugin(this).setDefaultPath("me.hope").build();
+        injector = new InjectorBuilder().setPlugin(this).setDefaultPath("me.renner6895").build();
 
         log = injector.register(Logger.class, this.getLogger());
         adminCommand = injector.register(PluginCommandMap.class, new PluginCommandMap(this));

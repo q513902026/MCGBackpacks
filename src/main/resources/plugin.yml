@@ -4,5 +4,6 @@ author: renner6895
 main: me.renner6895.backpacks.Main
 commands:
   backpack:
+    permission:
   backpacks:
   bp:
