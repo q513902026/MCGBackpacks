@@ -9,7 +9,8 @@ compileJava {
 }
 
 repositories {
-    jcenter()
+    mavenLocal()
+    mavenCentral()
 
     maven {
         name 'Spigot'
