@@ -74,8 +74,9 @@ public class Main extends JavaPlugin {
     public Main() {
         pluginName = "Backpacks";
     }
+
     @Override
-    public void onLoad(){
+    public void onLoad() {
         registerBeans();
     }
 
@@ -96,6 +97,7 @@ public class Main extends JavaPlugin {
             pluginPlayer.removal();
         }
     }
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -236,43 +238,44 @@ public class Main extends JavaPlugin {
 
     private void registerConfig() {
         if (plugin.getConfig().get("restore-defaults") == null || plugin.getConfig().getBoolean("restore-defaults")) {
-            plugin.getConfig().set("restore-defaults", (Object) false);
-            plugin.getConfig().set("config-version", (Object) 1);
-            plugin.getConfig().set("prefix", (Object) "&3&l[&bMystical&7Backpacks&3&l]");
-            plugin.getConfig().set("default-backpack.item-id", (Object) 130);
-            plugin.getConfig().set("default-backpack.item-data", (Object) 0);
-            plugin.getConfig().set("default-backpack.name", (Object) "&5Mystical &8Backpack");
-            plugin.getConfig().set("default-backpack.slots", (Object) 27);
-            plugin.getConfig().set("slot-filler.item-id", (Object) 160);
-            plugin.getConfig().set("slot-filler.item-data", (Object) 15);
-            plugin.getConfig().set("slot-filler.name", (Object) "&cNo Access");
+            plugin.getConfig().set("restore-defaults", false);
+            plugin.getConfig().set("config-version", 1);
+            plugin.getConfig().set("prefix", "&3&l[&bMystical&7Backpacks&3&l]");
+            plugin.getConfig().set("default-backpack.item-id", 130);
+            plugin.getConfig().set("default-backpack.item-data", 0);
+            plugin.getConfig().set("default-backpack.name", "&5Mystical &8Backpack");
+            plugin.getConfig().set("default-backpack.slots", 27);
+            plugin.getConfig().set("slot-filler.item-id", 160);
+            plugin.getConfig().set("slot-filler.item-data", 15);
+            plugin.getConfig().set("slot-filler.name", "&cNo Access");
             this.registerLang();
         }
         plugin.saveConfig();
     }
 
     private void registerLang() {
-        plugin.getConfig().set("give.error", (Object) "&cError: For information on how to use this command, type /backpacks help give");
-        plugin.getConfig().set("give.error2", (Object) "&7The player %s is not online");
-        plugin.getConfig().set("give.succuse", (Object) "&7New Backpack given to %s .");
-        plugin.getConfig().set("clone.error", (Object) "&cYou can only use this command as a player!");
-        plugin.getConfig().set("clone.succuse", (Object) "&7The backpack item has been cloned!");
-        plugin.getConfig().set("clone.error2", (Object) "&cYou must be holding a backpack for this to work!");
-        plugin.getConfig().set("rename.error", (Object) "&cError: You must be a player to use this command.");
-        plugin.getConfig().set("rename.error2", (Object) "&cError: For information on how to use this command, type /backpacks help rename");
-        plugin.getConfig().set("rename.error3", (Object) "&cError: You must be holding the backpack in your hand to rename it.");
-        plugin.getConfig().set("rename.succuse", (Object) "&7Backpack renamed to %s &7.");
-        plugin.getConfig().set("delete.error", (Object) "&cYou can only use this command as a player!");
-        plugin.getConfig().set("delete.succuse", (Object) "&7The backpack has been delete!");
-        plugin.getConfig().set("delete.error", (Object) "&cYou can only use this command as a player!");
+        plugin.getConfig().set("give.error", "&cError: For information on how to use this command, type /backpacks help give");
+        plugin.getConfig().set("give.error2", "&7The player %s is not online");
+        plugin.getConfig().set("give.succuse", "&7New Backpack given to %s .");
+        plugin.getConfig().set("clone.error", "&cYou can only use this command as a player!");
+        plugin.getConfig().set("clone.succuse", "&7The backpack item has been cloned!");
+        plugin.getConfig().set("clone.error2", "&cYou must be holding a backpack for this to work!");
+        plugin.getConfig().set("rename.error", "&cError: You must be a player to use this command.");
+        plugin.getConfig().set("rename.error2", "&cError: For information on how to use this command, type /backpacks help rename");
+        plugin.getConfig().set("rename.error3", "&cError: You must be holding the backpack in your hand to rename it.");
+        plugin.getConfig().set("rename.succuse", "&7Backpack renamed to %s &7.");
+        plugin.getConfig().set("delete.error", "&cYou can only use this command as a player!");
+        plugin.getConfig().set("delete.succuse", "&7The backpack has been delete!");
+        plugin.getConfig().set("delete.error", "&cYou can only use this command as a player!");
     }
 
     private void registerEvents() {
         final PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents((Listener) new InventoryEvents(plugin), (Plugin) plugin);
-        pm.registerEvents((Listener) new JoinLeaveEvents(plugin), (Plugin) plugin);
-        pm.registerEvents((Listener) new CraftingEvents(plugin), (Plugin) plugin);
+        pm.registerEvents(new InventoryEvents(plugin), plugin);
+        pm.registerEvents(new JoinLeaveEvents(plugin), plugin);
+        pm.registerEvents(new CraftingEvents(plugin), plugin);
     }
+
     /**
      * 注册命令
      */
@@ -359,6 +362,6 @@ public class Main extends JavaPlugin {
         injector = new InjectorBuilder().setPlugin(this).setDefaultPath("me.hope").build();
 
         log = injector.register(Logger.class, this.getLogger());
-        adminCommand = injector.register(PluginCommandMap.class,new PluginCommandMap(this));
+        adminCommand = injector.register(PluginCommandMap.class, new PluginCommandMap(this));
     }
 }
