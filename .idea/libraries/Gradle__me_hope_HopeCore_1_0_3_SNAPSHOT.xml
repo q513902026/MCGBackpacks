@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: me.hope:HopeCore:1.0.3-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.3-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

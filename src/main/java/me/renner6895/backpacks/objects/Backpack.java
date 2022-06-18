@@ -50,7 +50,7 @@ public class Backpack {
             this.User_ID = fileConfig.getString("bind-id");
             this.isAdminBackpack = (this.User_ID == null);
         } catch (NullPointerException e) {
-            Main.INSTANCE().log(this.file.getName() + "载入时发生了错误,可能是错误的保存物品导致的");
+            Main.log.warning(this.file.getName() + "载入时发生了错误,可能是错误的保存物品导致的");
         }
     }
 

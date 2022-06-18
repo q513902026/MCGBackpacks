@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="jar://D:/Program Files/Java/jdk1.8.0_261/jre/lib/ext/nashorn.jar!/jdk/nashorn/internal/runtime/regexp/joni/Config.class" charset="UTF-16LE" />
+    <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.3-SNAPSHOT.jar!/me/hope/core/PluginLogger.class" charset="UTF-16BE" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

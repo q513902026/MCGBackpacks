@@ -225,7 +225,7 @@ public class BackpackCMD implements CommandExecutor {
                 }
                 final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, this.color(String.format(this.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))),page2);
                 ((Player) sender).openInventory(inv);
-                Main.INSTANCE().log("玩家<"+sender.getName()+"> 正在查询玩家<"+bindID+">的所有背包");
+                Main.log.info("玩家<"+sender.getName()+"> 正在查询玩家<"+bindID+">的所有背包");
                 return false;
             }else if (args[0].equalsIgnoreCase("rebuildCache")){
                 if (!this.checkPermission("backpacks.admin.view", sender, true)) {
@@ -233,7 +233,7 @@ public class BackpackCMD implements CommandExecutor {
                 }
                 if (sender instanceof ConsoleCommandSender){
                     this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin,() ->Main.INSTANCE().buildCache());
-                    this.plugin.log("正在异步建立缓存...");
+                    Main.log.info("正在异步建立缓存...");
                 }
                 return false;
             } else {
@@ -274,7 +274,7 @@ public class BackpackCMD implements CommandExecutor {
                     }
                 }
                 ((Player) sender).openInventory(inv2);
-                Main.INSTANCE().log("玩家<"+sender.getName()+"> 发起了查询所有背包的命令");
+                Main.log.info("玩家<"+sender.getName()+"> 发起了查询所有背包的命令");
                 return false;
             }
         } else {
@@ -417,7 +417,7 @@ public class BackpackCMD implements CommandExecutor {
         if (!sender.hasPermission(string)) {
             if (sendMessage) {
                 sender.sendMessage(this.color(this.plugin.getPrefix() + String.format(this.getFormatText("permission.error", "&cYou do not have permission to use this command! (%s)"), string)));
-                this.plugin.log("User " + sender.getName() + " was denied access to a command. (" + string + ")");
+                Main.log.info("User " + sender.getName() + " was denied access to a command. (" + string + ")");
             }
             return false;
         }

@@ -1,6 +1,9 @@
 package me.renner6895.backpacks;
 
 import com.google.common.base.Charsets;
+import me.hope.core.PluginLogger;
+import me.hope.core.inject.Injector;
+import me.hope.core.inject.InjectorBuilder;
 import me.renner6895.backpacks.commands.BackpackCMD;
 import me.renner6895.backpacks.events.CraftingEvents;
 import me.renner6895.backpacks.events.InventoryEvents;
@@ -30,7 +33,26 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * @author HopeAsd
+ * @author xiaoyv_404
+ */
 public class Main extends JavaPlugin {
+    /**
+     * 日志文件实例
+     */
+    public static Logger log;
+
+    /**
+     * 实例注入
+     */
+    private static Injector injector;
+
+    /**
+     * 插件实例
+     */
+    private static Main instance;
+
     private static Main plugin;
     private NMSUtil nmsUtil;
     private final String pluginName;
@@ -44,14 +66,12 @@ public class Main extends JavaPlugin {
     public static int defaultItemId;
     public static short defaultItemData;
 
-    private final Logger log = getLogger();
-
     public Main() {
         this.pluginName = "Backpacks";
     }
 
     public void onDisable() {
-        this.log("Save Backpacks......");
+        log.info("Save Backpacks......");
         long lastTime = System.currentTimeMillis();
         int length = 0;
         for (final Backpack backpack : this.backpackMap.values()) {
@@ -61,8 +81,8 @@ public class Main extends JavaPlugin {
                 length += 1;
             }
         }
-        this.log("Saving Backpacks Size: " + length);
-        this.log("Saving Backpacks Time-Consuming: " + (System.currentTimeMillis() - lastTime) + " ms");
+        log.info("Saving Backpacks Size: " + length);
+        log.info("Saving Backpacks Time-Consuming: " + (System.currentTimeMillis() - lastTime) + " ms");
         for (final PluginPlayer pluginPlayer : this.playerMap.values()) {
             pluginPlayer.removal();
         }
@@ -71,8 +91,8 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         this.plugin = this;
         if (!this.registerUtils()) {
-            this.log("You must use the last release of the Minecraft version you are using.");
-            Bukkit.getPluginManager().disablePlugin((Plugin) this);
+            log.info("You must use the last release of the Minecraft version you are using.");
+            Bukkit.getPluginManager().disablePlugin(this);
         } else {
             this.registerFiles();
             this.registerConfig();
@@ -81,7 +101,7 @@ public class Main extends JavaPlugin {
             this.registerCommands();
             long lastTime = System.currentTimeMillis();
             this.registerBackpacks();
-            this.log("Register Backpacks Time-Consuming: " + (System.currentTimeMillis() - lastTime) + " ms");
+            log.info("Register Backpacks Time-Consuming: " + (System.currentTimeMillis() - lastTime) + " ms");
             this.registerPlayers();
         }
     }
@@ -100,7 +120,7 @@ public class Main extends JavaPlugin {
     }
 
     private void registerPlayers() {
-        this.log("Update PluginPlayers...");
+        log.info("Update PluginPlayers...");
         this.playerMap = new HashMap<String, PluginPlayer>();
         for (final Player player : Bukkit.getOnlinePlayers()) {
             try {
@@ -112,7 +132,7 @@ public class Main extends JavaPlugin {
     }
 
     private void registerBackpacks() {
-        this.log("Update Backpacks...");
+        log.info("Update Backpacks...");
         Main.slotFiller = new SlotFiller(this.plugin);
         Main.defaultName = this.plugin.getConfig().getString("default-backpack.name");
         Main.defaultSlots = this.plugin.getConfig().getInt("default-backpack.slots");
@@ -123,13 +143,13 @@ public class Main extends JavaPlugin {
             Backpack bp = new Backpack(file, plugin);
             this.backpackMap.put(bp.getUniqueId(), bp);
         }
-        this.log("Backpack Size: " + this.backpackMap.size());
+        log.info("Backpack Size: " + this.backpackMap.size());
     }
 
     private void registerFiles() {
         final File backpacksFolder = new File(this.plugin.getDataFolder() + File.separator + "backpacks");
         if (!backpacksFolder.exists()) {
-            this.log("Generating backpacks folder...");
+            log.info("Generating backpacks folder...");
             backpacksFolder.mkdirs();
         }
     }
@@ -150,7 +170,7 @@ public class Main extends JavaPlugin {
     private void registerCache() {
         backpackCacheFile = new File(this.getDataFolder(), "cache.yml");
         if (backpackCache == null) {
-            this.log("加载 背包缓存 ...");
+            log.info("加载 背包缓存 ...");
             backpackCache = YamlConfiguration.loadConfiguration(backpackCacheFile);
             reloadCache();
         }
@@ -194,7 +214,7 @@ public class Main extends JavaPlugin {
             perc = ((double) index / (double) maxLength) * 100;
             if ((phase = (int) (perc / 8)) > lastPhase) {
                 lastPhase = phase;
-                this.log(String.format("正在建立缓存,当前进度(%d/%d) - %d%% ...", index, maxLength, (int) perc));
+                log.info(String.format("正在建立缓存,当前进度(%d/%d) - %d%% ...", index, maxLength, (int) perc));
             }
             entry.getValue().load();
             cacheBackpackInfo(entry.getKey().toString(), entry.getValue().getBindID(), true);
@@ -202,7 +222,7 @@ public class Main extends JavaPlugin {
 
         }
         saveBackpackCache();
-        this.log("缓存建立完成,数量:" + index);
+        log.info("缓存建立完成,数量:" + index);
     }
 
     private void registerConfig() {
@@ -316,15 +336,6 @@ public class Main extends JavaPlugin {
         return this.nmsUtil;
     }
 
-    public void log(final Object o) {
-        System.out.println("[" + this.pluginName + "] " + o);
-    }
-
-    public void debug(final Object o) {
-        Bukkit.broadcastMessage("[" + this.pluginName + "] " + o);
-        this.log(o);
-    }
-
     public Map<UUID, Backpack> getBackpackMap() {
         return this.backpackMap;
     }
@@ -333,7 +344,9 @@ public class Main extends JavaPlugin {
         return plugin;
     }
 
-    ;
+    private void registerBeans() {
+        injector = new InjectorBuilder().setPlugin(this).setDefaultPath("me.hope").build();
 
-
+        log = injector.register(Logger.class, this.getLogger());
+    }
 }
