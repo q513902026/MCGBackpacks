@@ -230,7 +230,7 @@ public class Backpack {
 
     public String getBindID() {
         if (Main.INSTANCE().hasBackpackCache(this.Backpack_ID.toString())){
-            return Main.INSTANCE().getBackpackBindCache(this.Backpack_ID.toString())
+            return Main.INSTANCE().getBackpackBindCache(this.Backpack_ID.toString());
         }
         if (this.User_ID == null && !this.isAdminBackpack) {
             final FileConfiguration fileConfig = getFileConfig();

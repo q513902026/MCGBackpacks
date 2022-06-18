@@ -1,7 +1,7 @@
 plugins {
     id 'java'
 }
-version = "3.1.9"
+version = "3.1.10"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
