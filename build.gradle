@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
-    compile fileTree(dir: "libs", include: ['*.jar'])
+    compile 'me.hope:HopeCore:1.0.3'
 }
 
 tasks.withType(JavaCompile) {
