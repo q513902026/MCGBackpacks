@@ -69,6 +69,10 @@ public class Main extends JavaPlugin {
     public Main() {
         this.pluginName = "Backpacks";
     }
+    @Override
+    public void onLoad(){
+        registerBeans();
+    }
 
     public void onDisable() {
         log.info("Save Backpacks......");
