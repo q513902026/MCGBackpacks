@@ -12,16 +12,12 @@ import org.bukkit.entity.Player;
 /**
  * @author xiaoyv_404
  */
-@CommandPermission("backpacks.edit.clone")
+@CommandPermission(value = "backpacks.edit.clone",onlyConsole = true)
 public class CloneCommand extends HopeCommand {
     Main plugin = getPlugin();
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage(ColorTool.color(plugin.getPrefix() + FormatTool.getFormatText("clone.error", "&cYou can only use this command as a player!")));
-            return false;
-        }
         final Player player = (Player) commandSender;
         if (this.plugin.itemIsBackpack(player.getInventory().getItemInMainHand())) {
             player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
