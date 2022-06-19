@@ -1,6 +1,7 @@
 package me.renner6895.backpacks.commands;
 
-import me.hope.core.inject.annotation.CommandPermission;
+import me.hope.core.CommandType;
+import me.hope.core.inject.annotation.command.CommandPermission;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;
@@ -15,9 +16,8 @@ import java.util.UUID;
 
 /**
  * @author xiaoyv_404
- * todo 修改成onlyPlayer
  */
-@CommandPermission(value = "backpacks.edit.rename",onlyConsole = true)
+@CommandPermission(value = "backpacks.edit.rename",type = CommandType.PLAYER)
 public class RenameCommand extends HopeCommand {
 
     Main plugin = getPlugin();

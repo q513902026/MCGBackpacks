@@ -1,6 +1,7 @@
 package me.renner6895.backpacks.commands;
 
-import me.hope.core.inject.annotation.CommandPermission;
+import me.hope.core.CommandType;
+import me.hope.core.inject.annotation.command.CommandPermission;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;
@@ -18,9 +19,8 @@ import java.util.List;
 
 /**
  * @author xiaoyv_404
- * todo 修改为onlyPlayer
  */
-@CommandPermission("backpacks.admin.view")
+@CommandPermission(value = "backpacks.admin.view",type = CommandType.PLAYER)
 public class ViewCommand extends HopeCommand {
 
     Main plugin = getPlugin();

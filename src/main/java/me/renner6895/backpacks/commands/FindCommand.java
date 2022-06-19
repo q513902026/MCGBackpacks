@@ -1,7 +1,7 @@
 package me.renner6895.backpacks.commands;
 
 import com.google.common.collect.Lists;
-import me.hope.core.inject.annotation.CommandPermission;
+import me.hope.core.inject.annotation.command.CommandPermission;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;

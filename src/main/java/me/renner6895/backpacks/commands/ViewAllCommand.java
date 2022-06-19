@@ -1,6 +1,7 @@
 package me.renner6895.backpacks.commands;
 
-import me.hope.core.inject.annotation.CommandPermission;
+import me.hope.core.CommandType;
+import me.hope.core.inject.annotation.command.CommandPermission;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;
@@ -18,9 +19,8 @@ import java.util.TreeMap;
 
 /**
  * @author xiaoyv_404
- * todo OnlyPlayer
  */
-@CommandPermission("backpacks.admin.viewall")
+@CommandPermission(value = "backpacks.admin.viewall",type = CommandType.PLAYER)
 public class ViewAllCommand extends HopeCommand {
 
     Main plugin = getPlugin();

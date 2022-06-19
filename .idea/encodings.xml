@@ -15,6 +15,8 @@
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/tools/FormatTool.java" charset="UTF-8" />
     <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.5-SNAPSHOT.jar!/me/hope/core/PluginCommandMap.class" charset="UTF-16BE" />
     <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.5-SNAPSHOT.jar!/me/hope/core/inject/annotation/CommandAlias.class" charset="UTF-16BE" />
+    <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.6-SNAPSHOT.jar!/me/hope/core/CommandType.class" charset="UTF-16LE" />
+    <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.6-SNAPSHOT.jar!/me/hope/core/inject/annotation/command/CommandPermission.class" charset="UTF-16BE" />
     <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/command/ConsoleCommandSender.class" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
