@@ -41,3 +41,13 @@ k
 Msrc/main/java/me/renner6895/backpacks/commands/abstractclass/HopeCommand.java,1\b\1be5b1d3f0af8c5ae6eac3a13ed6af966d995865
 o
 ?src/main/java/me/renner6895/backpacks/commands/HelpCommand.java,8\c\8c1c67311479d78beae1e5897a05cd1fadf3ada0
+k
+;src/main/java/me/renner6895/backpacks/tools/FormatTool.java,e\2\e2ebea57460f06ec85c523c03fcb718f1debd1fc
+j
+:src/main/java/me/renner6895/backpacks/tools/ColorTool.java,a\9\a9e898073d1d0ab0214cf2c3c9a94317d9d807fd
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
+?
+settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
+p
+@src/main/java/me/renner6895/backpacks/commands/CloneCommand.java,d\3\d3e07b591bcaef450a3e0f04367129cadcda2984

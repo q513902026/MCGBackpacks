@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/BackPackCache.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/CloneCommand.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/DeleteCommand.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/FindCommand.java" charset="UTF-8" />
@@ -18,6 +19,11 @@
     <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.6-SNAPSHOT.jar!/me/hope/core/CommandType.class" charset="UTF-16LE" />
     <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.6-SNAPSHOT.jar!/me/hope/core/inject/annotation/command/CommandPermission.class" charset="UTF-16BE" />
     <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/command/ConsoleCommandSender.class" charset="GBK" />
+    <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/configuration/MemoryConfiguration.class" charset="UTF-16LE" />
+    <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/configuration/MemorySection.class" charset="UTF-16LE" />
+    <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/configuration/file/FileConfiguration.class" charset="GBK" />
+    <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/configuration/file/YamlConfiguration.class" charset="UTF-16BE" />
+    <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/plugin/java/JavaPlugin.class" charset="UTF-16LE" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

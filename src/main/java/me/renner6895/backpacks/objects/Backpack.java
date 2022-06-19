@@ -1,5 +1,6 @@
 package me.renner6895.backpacks.objects;
 
+import me.renner6895.backpacks.BackPackCache;
 import me.renner6895.backpacks.InvUtil;
 import me.renner6895.backpacks.Main;
 import org.bukkit.Bukkit;
@@ -36,7 +37,7 @@ public class Backpack {
         this.file = file;
         this.plugin = plugin;
         this.Backpack_ID = UUID.fromString(this.file.getName().substring(0, this.file.getName().length() - 4));
-        this.User_ID = Main.INSTANCE().hasBackpackCache(this.Backpack_ID.toString()) ? Main.INSTANCE().getBackpackBindCache(this.Backpack_ID.toString()) : null;
+        this.User_ID = new BackPackCache().hasBackpackCache(this.Backpack_ID.toString()) ? new BackPackCache().getBackpackBindCache(this.Backpack_ID.toString()) : null;
         this.isAdminBackpack = false;
     }
 
@@ -229,8 +230,8 @@ public class Backpack {
     }
 
     public String getBindID() {
-        if (Main.INSTANCE().hasBackpackCache(this.Backpack_ID.toString())){
-            return Main.INSTANCE().getBackpackBindCache(this.Backpack_ID.toString());
+        if (new BackPackCache().hasBackpackCache(this.Backpack_ID.toString())){
+            return new BackPackCache().getBackpackBindCache(this.Backpack_ID.toString());
         }
         if (this.User_ID == null && !this.isAdminBackpack) {
             final FileConfiguration fileConfig = getFileConfig();
@@ -239,7 +240,7 @@ public class Backpack {
                 this.isAdminBackpack = true;
                 return null;
             }
-            Main.INSTANCE().cacheBackpackInfo(this.Backpack_ID.toString(), this.User_ID);
+            new BackPackCache().cacheBackpackInfo(this.Backpack_ID.toString(), this.User_ID);
         }
         return this.User_ID;
     }

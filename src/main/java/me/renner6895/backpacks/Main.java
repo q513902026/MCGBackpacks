@@ -56,10 +56,7 @@ public class Main extends JavaPlugin {
     private static PluginCommandMap<Main> adminCommand;
     private NMSUtil nmsUtil;
     private final String pluginName;
-    private Map<UUID, Backpack> backpackMap;
     private Map<String, PluginPlayer> playerMap;
-    private FileConfiguration backpackCache;
-    private File backpackCacheFile;
     public static SlotFiller slotFiller;
     public static String defaultName;
     public static int defaultSlots;
@@ -79,7 +76,7 @@ public class Main extends JavaPlugin {
         log.info("Save Backpacks......");
         long lastTime = System.currentTimeMillis();
         int length = 0;
-        for (final Backpack backpack : this.backpackMap.values()) {
+        for (final Backpack backpack : BackPackCache.backpackMap.values()) {
             if (backpack.isInit() && backpack.hasViewer()) {
                 backpack.clearViewers();
                 backpack.saveBackpack();
@@ -107,7 +104,7 @@ public class Main extends JavaPlugin {
         }
         this.registerFiles();
         this.registerConfig();
-        this.registerCache();
+        BackPackCache.register();
         this.registerEvents();
         registerCommands();
         long lastTime = System.currentTimeMillis();
@@ -132,7 +129,7 @@ public class Main extends JavaPlugin {
 
     private void registerPlayers() {
         log.info("Update PluginPlayers...");
-        this.playerMap = new HashMap<String, PluginPlayer>();
+        this.playerMap = new HashMap<>();
         for (final Player player : Bukkit.getOnlinePlayers()) {
             try {
                 this.registerPlayer(new PluginPlayer(player));
@@ -149,12 +146,12 @@ public class Main extends JavaPlugin {
         Main.defaultSlots = instance.getConfig().getInt("default-backpack.slots");
         Main.defaultItemId = instance.getConfig().getInt("default-backpack.item-id");
         Main.defaultItemData = (byte) instance.getConfig().getInt("default-backpack.item-data");
-        this.backpackMap = new HashMap<UUID, Backpack>();
+        BackPackCache.backpackMap = new HashMap<UUID, Backpack>();
         for (File file : new File(instance.getDataFolder() + File.separator + "backpacks").listFiles()) {
             Backpack bp = new Backpack(file, instance);
-            this.backpackMap.put(bp.getUniqueId(), bp);
+            BackPackCache.backpackMap.put(bp.getUniqueId(), bp);
         }
-        log.info("Backpack Size: " + this.backpackMap.size());
+        log.info("Backpack Size: " + BackPackCache.backpackMap.size());
     }
 
     private void registerFiles() {
@@ -164,78 +161,6 @@ public class Main extends JavaPlugin {
             backpacksFolder.mkdirs();
         }
     }
-
-
-    private void reloadCache() {
-        final InputStream defConfigStream = this.getResource("cache.yml");
-        if (defConfigStream == null) {
-            return;
-        }
-        backpackCache.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
-    }
-
-    /**
-     * 必须在registerBackpack之前运行
-     * 用于加载存储的背包拥有者信息
-     */
-    private void registerCache() {
-        backpackCacheFile = new File(this.getDataFolder(), "cache.yml");
-        if (backpackCache == null) {
-            log.info("加载 背包缓存 ...");
-            backpackCache = YamlConfiguration.loadConfiguration(backpackCacheFile);
-            reloadCache();
-        }
-    }
-
-    public void cacheBackpackInfo(String UUID, String bindID) {
-        cacheBackpackInfo(UUID, bindID, false);
-    }
-
-    public void cacheBackpackInfo(String UUID, String bindID, boolean skipSave) {
-        backpackCache.set(UUID, bindID);
-        if (skipSave) {
-            return;
-        }
-        saveBackpackCache();
-    }
-
-    private void saveBackpackCache() {
-        try {
-            backpackCache.save(backpackCacheFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getBackpackBindCache(String UUID) {
-        return backpackCache.getString(UUID);
-    }
-
-    public boolean hasBackpackCache(String UUID) {
-        return backpackCache.contains(UUID);
-    }
-
-    public void buildCache() {
-        int index = 0;
-        int maxLength = this.backpackMap.size();
-        double perc;
-        int phase;
-        int lastPhase = 0;
-        for (final Map.Entry<UUID, Backpack> entry : this.backpackMap.entrySet()) {
-            perc = ((double) index / (double) maxLength) * 100;
-            if ((phase = (int) (perc / 8)) > lastPhase) {
-                lastPhase = phase;
-                log.info(String.format("正在建立缓存,当前进度(%d/%d) - %d%% ...", index, maxLength, (int) perc));
-            }
-            entry.getValue().load();
-            cacheBackpackInfo(entry.getKey().toString(), entry.getValue().getBindID(), true);
-            index += 1;
-
-        }
-        saveBackpackCache();
-        log.info("缓存建立完成,数量:" + index);
-    }
-
     private void registerConfig() {
         if (instance.getConfig().get("restore-defaults") == null || instance.getConfig().getBoolean("restore-defaults")) {
             instance.getConfig().set("restore-defaults", false);
@@ -308,7 +233,7 @@ public class Main extends JavaPlugin {
     }
 
     public Backpack getBackpack(final UUID uuid) {
-        Backpack bp = this.backpackMap.get(uuid);
+        Backpack bp = BackPackCache.backpackMap.get(uuid);
         if (!bp.isInit()) {
             bp.load();
         }
@@ -320,11 +245,11 @@ public class Main extends JavaPlugin {
     }
 
     public void registerBackpack(final Backpack backpack) {
-        this.backpackMap.put(backpack.getUniqueId(), backpack);
+        BackPackCache.backpackMap.put(backpack.getUniqueId(), backpack);
     }
 
     public void unregisterBackpack(final Backpack backpack) {
-        this.backpackMap.remove(backpack.getUniqueId());
+        BackPackCache.backpackMap.remove(backpack.getUniqueId());
     }
 
     public PluginPlayer getPluginPlayer(final String id) {
@@ -333,7 +258,7 @@ public class Main extends JavaPlugin {
 
     private void linkPlayerToBackpack(final PluginPlayer pluginPlayer) {
         final String name = pluginPlayer.getPlayer().getName();
-        for (final Map.Entry<UUID, Backpack> entry : this.backpackMap.entrySet()) {
+        for (final Map.Entry<UUID, Backpack> entry : BackPackCache.backpackMap.entrySet()) {
             if (entry.getValue().getBackpackForName(name) != null) {
                 pluginPlayer.addBackpack(entry.getValue());
             }
@@ -359,7 +284,7 @@ public class Main extends JavaPlugin {
     }
 
     public Map<UUID, Backpack> getBackpackMap() {
-        return this.backpackMap;
+        return BackPackCache.backpackMap;
     }
 
     public static Main INSTANCE() {
