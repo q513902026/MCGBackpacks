@@ -45,34 +45,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("rename")) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error", "&cError: You must be a player to use this command.")));
-                    return false;
-                }
-                if (!this.checkPermission("backpacks.edit.rename", sender, true)) {
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error2", "&cError: For information on how to use this command, type /backpacks help rename")));
-                    return false;
-                }
-                final Player player = (Player) sender;
-                final ItemStack item = player.getInventory().getItemInMainHand();
-                if (!this.plugin.itemIsBackpack(item)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error3", "&cError: You must be holding the backpack in your hand to rename it.")));
-                    return false;
-                }
-                final String name = args[1].replaceAll("_", " ");
-                final String backpackId = this.plugin.getNmsUtil().getStringTag(item, "backpack-item");
-                final Backpack backpack = this.plugin.getBackpack(UUID.fromString(backpackId));
-                backpack.updateName(name);
-                final ItemStack newBPItem = backpack.getItem();
-                newBPItem.setAmount(item.getAmount());
-                player.getInventory().setItemInMainHand(newBPItem);
-                sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("rename.succuse", "&7Backpack renamed to %s &7."), name)));
-                return false;
-            } else if (args[0].equalsIgnoreCase("delete")) {
+            if (args[0].equalsIgnoreCase("delete")) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("delete.error", "&cYou can only use this command as a player!")));
                     return false;
