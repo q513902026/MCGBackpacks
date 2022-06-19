@@ -8,7 +8,6 @@ import me.renner6895.backpacks.objects.PluginPlayer;
 import me.renner6895.backpacks.tools.ColorTool;
 import me.renner6895.backpacks.tools.FormatTool;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -46,23 +45,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("give")) {
-                if (!this.checkPermission("backpacks.admin.give", sender, true)) {
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("give.error", "&cError: For information on how to use this command, type /backpacks help give")));
-                    return false;
-                }
-                final Player player = Bukkit.getPlayer(args[1]);
-                if (player == null) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.error2", "&7The player %s is not online"), args[1])));
-                    return false;
-                }
-                CreateCache.createBackpack(player, args);
-                sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.succuse", "&7New Backpack given to %s ."), args[1])));
-                return false;
-            } else if (args[0].equalsIgnoreCase("clone")) {
+            if (args[0].equalsIgnoreCase("clone")) {
                 if (!this.checkPermission("backpacks.edit.clone", sender, true)) {
                     return false;
                 }
@@ -417,6 +400,7 @@ public class BackpackCMD implements CommandExecutor {
         }
         return true;
     }
+
     private void removeBackPacks(final Backpack backpack) {
         final File file = new File(this.plugin.getDataFolder() + File.separator + "backpacks", backpack.getUniqueId() + ".yml");
         this.plugin.unregisterBackpack(backpack);

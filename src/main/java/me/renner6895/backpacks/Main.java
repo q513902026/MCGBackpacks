@@ -6,6 +6,7 @@ import me.hope.core.inject.Injector;
 import me.hope.core.inject.InjectorBuilder;
 import me.renner6895.backpacks.commands.BackpackCMD;
 import me.renner6895.backpacks.commands.CreateCache;
+import me.renner6895.backpacks.commands.GiveCommand;
 import me.renner6895.backpacks.events.CraftingEvents;
 import me.renner6895.backpacks.events.InventoryEvents;
 import me.renner6895.backpacks.events.JoinLeaveEvents;
@@ -18,9 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -282,6 +281,7 @@ public class Main extends JavaPlugin {
     private void registerCommands() {
         adminCommand.registerCommand("backpack", new BackpackCMD(plugin));
         adminCommand.registerCommand("create", injector.getSingleton(CreateCache.class));
+        adminCommand.registerCommand("give", injector.getSingleton(GiveCommand.class));
     }
 
     public boolean itemIsBackpack(final ItemStack item) {
