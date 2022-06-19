@@ -1,0 +1,11 @@
+
+p
+java:S1192c"NDefine a constant instead of duplicating this literal "backpack.give" 3 times.(ÎªÍ­üÿÿÿÿ8‡§§Í—0
+h
+java:S1192c"FDefine a constant instead of duplicating this literal "lang." 3 times.(ÎªÍ­üÿÿÿÿ8“Ñ¥Í—0
+o
+java:S3776%"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(›é­ú8¸¼šÍ—0
+J	java:S108<")Either remove or fill this block of code.(Íæè½ùÿÿÿÿ8»¼šÍ—0
+J	java:S108@")Either remove or fill this block of code.(–¦†Ÿøÿÿÿÿ8æ»³Í—0
+U
+java:S3878]"8Remove this array creation and simply pass the elements.(‚Î“›8¿¼šÍ—0
