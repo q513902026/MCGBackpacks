@@ -1,5 +1,6 @@
 package me.renner6895.backpacks.tools;
 
+import me.hope.core.inject.annotation.Inject;
 import me.renner6895.backpacks.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -7,8 +8,8 @@ import org.bukkit.configuration.file.FileConfiguration;
  * @author xiaoyv_404
  */
 public class FormatTool {
-
-    static Main plugin = Main.INSTANCE();
+    @Inject
+    private static Main plugin;
 
     public static String getFormatText(final String key, final String defval) {
         final FileConfiguration config = plugin.getConfig();

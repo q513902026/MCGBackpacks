@@ -1,15 +1,17 @@
 package me.renner6895.backpacks.events;
 
+import me.hope.core.inject.annotation.Inject;
 import me.renner6895.backpacks.*;
 import me.renner6895.backpacks.objects.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 public class JoinLeaveEvents implements Listener {
-    private Main plugin;
+    @Inject
+    private static Main plugin;
 
-    public JoinLeaveEvents(final Main plugin) {
-        this.plugin = plugin;
+    public JoinLeaveEvents() {
+
     }
 
     @EventHandler

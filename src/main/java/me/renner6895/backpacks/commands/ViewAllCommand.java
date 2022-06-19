@@ -1,7 +1,9 @@
 package me.renner6895.backpacks.commands;
 
 import me.hope.core.CommandType;
+import me.hope.core.inject.annotation.Inject;
 import me.hope.core.inject.annotation.command.CommandPermission;
+import me.renner6895.backpacks.BackPackCache;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;
@@ -24,13 +26,15 @@ import java.util.TreeMap;
 public class ViewAllCommand extends HopeCommand {
 
     Main plugin = getPlugin();
+    @Inject
+    private static BackPackCache backPackCache;
     private TreeMap<Double, Backpack> orderedBackpackMap;
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (this.orderedBackpackMap == null || this.orderedBackpackMap.size() != this.plugin.getBackpackMap().size()) {
+        if (this.orderedBackpackMap == null || this.orderedBackpackMap.size() != backPackCache.getBackpackMap().size()) {
             this.orderedBackpackMap = new TreeMap<>();
-            for (final Backpack bp2 : this.plugin.getBackpackMap().values()) {
+            for (final Backpack bp2 : backPackCache.getBackpackMap().values()) {
                 double d2 = bp2.getSlots();
                 for (boolean f2 = false; this.orderedBackpackMap.get(d2) != null && !f2; d2 += 0.001) {
                 }
@@ -44,7 +48,7 @@ public class ViewAllCommand extends HopeCommand {
             } catch (NumberFormatException ex2) {
             }
         }
-        final Inventory inv2 = Bukkit.createInventory(new BackpackHolder(this.plugin, null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing All &8page %s"), page)));
+        final Inventory inv2 = Bukkit.createInventory(new BackpackHolder(null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing All &8page %s"), page)));
         int counter2 = 0;
         for (final Backpack backpack : this.orderedBackpackMap.values()) {
             if (counter2 >= (page - 1) * 54 && counter2 < page * 54) {

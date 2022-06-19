@@ -24,7 +24,7 @@ import java.util.UUID;
  * @create 2022/6/19
  **/
 @CommandPermission("backpacks.admin.create")
-public class CreateCache extends HopeCommand {
+public class CreateCommand extends HopeCommand {
 
     static Main plugin = getPlugin();
 
@@ -85,7 +85,7 @@ public class CreateCache extends HopeCommand {
         } catch (IOException var13) {
             var13.printStackTrace();
         }
-        final Backpack backpack = new Backpack(file, plugin);
+        final Backpack backpack = new Backpack(file);
         backpack.load();
         final PluginPlayer pluginPlayer = plugin.getPluginPlayer(id);
         plugin.registerBackpack(backpack);

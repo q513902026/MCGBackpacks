@@ -1,5 +1,6 @@
 package me.renner6895.backpacks.objects;
 
+import me.hope.core.inject.annotation.Inject;
 import me.renner6895.backpacks.BackPackCache;
 import me.renner6895.backpacks.InvUtil;
 import me.renner6895.backpacks.Main;
@@ -22,7 +23,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class Backpack {
-    private final Main plugin;
+    @Inject
+    private static Main plugin;
+    @Inject
+    private static BackPackCache backPackCache;
+
     private final UUID Backpack_ID;
     private final File file;
     private String User_ID;
@@ -33,11 +38,11 @@ public class Backpack {
     private Inventory inventory;
     private FileConfiguration fileConfig;
     private boolean isAdminBackpack;
-    public Backpack(final File file, final Main plugin) {
+
+    public Backpack(final File file) {
         this.file = file;
-        this.plugin = plugin;
         this.Backpack_ID = UUID.fromString(this.file.getName().substring(0, this.file.getName().length() - 4));
-        this.User_ID = new BackPackCache().hasBackpackCache(this.Backpack_ID.toString()) ? new BackPackCache().getBackpackBindCache(this.Backpack_ID.toString()) : null;
+        this.User_ID = backPackCache.hasBackpackCache(this.Backpack_ID.toString()) ? backPackCache.getBackpackBindCache(this.Backpack_ID.toString()) : null;
         this.isAdminBackpack = false;
     }
 
@@ -56,7 +61,7 @@ public class Backpack {
     }
 
     private void loadInv(ConfigurationSection fileConfig) {
-        this.inventory = Bukkit.createInventory(new BackpackHolder(this.plugin, this.Backpack_ID), 54, getRawName());
+        this.inventory = Bukkit.createInventory(new BackpackHolder(this.Backpack_ID), 54, getRawName());
         try {
             this.inventory.setContents(InvUtil.loadInventory(fileConfig));
         } catch (InvalidConfigurationException | IllegalArgumentException ex4) {
@@ -127,7 +132,7 @@ public class Backpack {
 
     public void removeBackpack() {
         this.clearViewers();
-        this.plugin.unregisterBackpack(this);
+        plugin.unregisterBackpack(this);
         this.file.delete();
     }
 
@@ -145,13 +150,13 @@ public class Backpack {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&7Slots: &c" + this.getSlots()));
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
-        item = this.plugin.getNmsUtil().setStringTag(item, "backpack-item", this.getUniqueId().toString());
+        item = plugin.getNmsUtil().setStringTag(item, "backpack-item", this.getUniqueId().toString());
 
         if (this.getBindID() == null){
             return item;
         }
 
-        item = this.plugin.getNmsUtil().setStringTag(item, "backpack-owner", this.getBindID());
+        item = plugin.getNmsUtil().setStringTag(item, "backpack-owner", this.getBindID());
         return item;
     }
 
@@ -230,8 +235,8 @@ public class Backpack {
     }
 
     public String getBindID() {
-        if (new BackPackCache().hasBackpackCache(this.Backpack_ID.toString())){
-            return new BackPackCache().getBackpackBindCache(this.Backpack_ID.toString());
+        if (backPackCache.hasBackpackCache(this.Backpack_ID.toString())){
+            return backPackCache.getBackpackBindCache(this.Backpack_ID.toString());
         }
         if (this.User_ID == null && !this.isAdminBackpack) {
             final FileConfiguration fileConfig = getFileConfig();
@@ -240,7 +245,7 @@ public class Backpack {
                 this.isAdminBackpack = true;
                 return null;
             }
-            new BackPackCache().cacheBackpackInfo(this.Backpack_ID.toString(), this.User_ID);
+            backPackCache.cacheBackpackInfo(this.Backpack_ID.toString(), this.User_ID);
         }
         return this.User_ID;
     }

@@ -1,6 +1,7 @@
 package me.renner6895.backpacks;
 
 import com.google.common.collect.Lists;
+import me.hope.core.inject.annotation.Inject;
 import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.apache.commons.codec.binary.Base64;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class InvUtil {
+    @Inject
+    private static Main plugin;
     public static String saveInventory(final Inventory inventory) {
         final YamlConfiguration config = new YamlConfiguration();
         saveInventory(inventory, config, inventory.getSize());
@@ -24,7 +27,7 @@ public class InvUtil {
 
     private static String getNBTString(ItemStack item) {
         if (item != null) {
-            NBTTagCompound nbt = (NBTTagCompound) Main.INSTANCE().getNmsUtil().getTag(item);
+            NBTTagCompound nbt = (NBTTagCompound) plugin.getNmsUtil().getTag(item);
             if (nbt != null &&nbt.hasKey("BlockEntityTag")) {
                 nbt = nbt.getCompound("BlockEntityTag");
                 try {
@@ -44,7 +47,7 @@ public class InvUtil {
             try {
                 ByteArrayInputStream buf = new ByteArrayInputStream(Base64.decodeBase64(nbt));
                 NBTTagCompound nbtc = NBTCompressedStreamTools.a(buf);
-                item = Main.INSTANCE().getNmsUtil().setTag(item, "BlockEntityTag",nbtc);
+                item = plugin.getNmsUtil().setTag(item, "BlockEntityTag",nbtc);
                 return item;
             } catch (IOException ex) {
 

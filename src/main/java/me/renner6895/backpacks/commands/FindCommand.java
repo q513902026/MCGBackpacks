@@ -1,7 +1,9 @@
 package me.renner6895.backpacks.commands;
 
 import com.google.common.collect.Lists;
+import me.hope.core.inject.annotation.Inject;
 import me.hope.core.inject.annotation.command.CommandPermission;
+import me.renner6895.backpacks.BackPackCache;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;
@@ -19,6 +21,8 @@ import java.util.List;
 public class FindCommand extends HopeCommand {
 
     Main plugin = getPlugin();
+    @Inject
+    private static BackPackCache backPackCache;
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -46,7 +50,7 @@ public class FindCommand extends HopeCommand {
 
     private List<Backpack> findOfflinePlayerBackpacks(String bindID) {
         List<Backpack> backpacks = Lists.newArrayList();
-        for (Backpack backpack : plugin.getBackpackMap().values()) {
+        for (Backpack backpack : backPackCache.getBackpackMap().values()) {
             if (Backpack.isOwner(backpack, bindID)) {
                 backpacks.add(backpack);
             }

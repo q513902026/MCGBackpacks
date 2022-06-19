@@ -1,6 +1,5 @@
 package me.renner6895.backpacks;
 
-import com.google.common.base.Charsets;
 import me.hope.core.PluginCommandMap;
 import me.hope.core.inject.Injector;
 import me.hope.core.inject.InjectorBuilder;
@@ -14,17 +13,12 @@ import me.renner6895.backpacks.objects.SlotFiller;
 import me.renner6895.nmstag.NMSUtil;
 import me.renner6895.nmstag.NMSUtil_1_12;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -44,18 +38,16 @@ public class Main extends JavaPlugin {
      * 实例注入
      */
     private static Injector injector;
-
     /**
-     * 插件实例
+     *
      */
-    private static Main instance;
-
+    private BackPackCache backPackCache;
     /**
      * 管理命令的注册
      */
     private static PluginCommandMap<Main> adminCommand;
+
     private NMSUtil nmsUtil;
-    private final String pluginName;
     private Map<String, PluginPlayer> playerMap;
     public static SlotFiller slotFiller;
     public static String defaultName;
@@ -64,7 +56,6 @@ public class Main extends JavaPlugin {
     public static short defaultItemData;
 
     public Main() {
-        pluginName = "Backpacks";
     }
 
     @Override
@@ -76,7 +67,7 @@ public class Main extends JavaPlugin {
         log.info("Save Backpacks......");
         long lastTime = System.currentTimeMillis();
         int length = 0;
-        for (final Backpack backpack : BackPackCache.backpackMap.values()) {
+        for (final Backpack backpack : backPackCache.getBackpackMap().values()) {
             if (backpack.isInit() && backpack.hasViewer()) {
                 backpack.clearViewers();
                 backpack.saveBackpack();
@@ -102,9 +93,9 @@ public class Main extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        injector.injectClasses();
         this.registerFiles();
         this.registerConfig();
-        BackPackCache.register();
         this.registerEvents();
         registerCommands();
         long lastTime = System.currentTimeMillis();
@@ -141,71 +132,69 @@ public class Main extends JavaPlugin {
 
     private void registerBackpacks() {
         log.info("Update Backpacks...");
-        Main.slotFiller = new SlotFiller(instance);
-        Main.defaultName = instance.getConfig().getString("default-backpack.name");
-        Main.defaultSlots = instance.getConfig().getInt("default-backpack.slots");
-        Main.defaultItemId = instance.getConfig().getInt("default-backpack.item-id");
-        Main.defaultItemData = (byte) instance.getConfig().getInt("default-backpack.item-data");
-        BackPackCache.backpackMap = new HashMap<>();
-        for (File file : new File(instance.getDataFolder() + File.separator + "backpacks").listFiles()) {
-            Backpack bp = new Backpack(file, instance);
-            BackPackCache.backpackMap.put(bp.getUniqueId(), bp);
-        }
-        log.info("Backpack Size: " + BackPackCache.backpackMap.size());
+        Main.slotFiller = new SlotFiller();
+        Main.slotFiller.refresh();
+        Main.defaultName = this.getConfig().getString("default-backpack.name");
+        Main.defaultSlots = this.getConfig().getInt("default-backpack.slots");
+        Main.defaultItemId = this.getConfig().getInt("default-backpack.item-id");
+        Main.defaultItemData = (byte) this.getConfig().getInt("default-backpack.item-data");
+
+        backPackCache.linkYamlFileToMap();
+        log.info("Backpack Size: " + backPackCache.getBackpackMap().size());
     }
 
     private void registerFiles() {
-        final File backpacksFolder = new File(instance.getDataFolder() + File.separator + "backpacks");
+        final File backpacksFolder = new File(this.getDataFolder() + File.separator + "backpacks");
         if (!backpacksFolder.exists()) {
             log.info("Generating backpacks folder...");
             backpacksFolder.mkdirs();
         }
     }
     private void registerConfig() {
-        if (instance.getConfig().get("restore-defaults") == null || instance.getConfig().getBoolean("restore-defaults")) {
-            instance.getConfig().set("restore-defaults", false);
-            instance.getConfig().set("config-version", 1);
-            instance.getConfig().set("prefix", "&3&l[&bMystical&7Backpacks&3&l]");
-            instance.getConfig().set("default-backpack.item-id", 130);
-            instance.getConfig().set("default-backpack.item-data", 0);
-            instance.getConfig().set("default-backpack.name", "&5Mystical &8Backpack");
-            instance.getConfig().set("default-backpack.slots", 27);
-            instance.getConfig().set("slot-filler.item-id", 160);
-            instance.getConfig().set("slot-filler.item-data", 15);
-            instance.getConfig().set("slot-filler.name", "&cNo Access");
+        if (this.getConfig().get("restore-defaults") == null || this.getConfig().getBoolean("restore-defaults")) {
+            this.getConfig().set("restore-defaults", false);
+            this.getConfig().set("config-version", 1);
+            this.getConfig().set("prefix", "&3&l[&bMystical&7Backpacks&3&l]");
+            this.getConfig().set("default-backpack.item-id", 130);
+            this.getConfig().set("default-backpack.item-data", 0);
+            this.getConfig().set("default-backpack.name", "&5Mystical &8Backpack");
+            this.getConfig().set("default-backpack.slots", 27);
+            this.getConfig().set("slot-filler.item-id", 160);
+            this.getConfig().set("slot-filler.item-data", 15);
+            this.getConfig().set("slot-filler.name", "&cNo Access");
             this.registerLang();
         }
-        instance.saveConfig();
+        this.saveConfig();
     }
 
     private void registerLang() {
-        instance.getConfig().set("give.error", "&cError: For information on how to use this command, type /backpacks help give");
-        instance.getConfig().set("give.error2", "&7The player %s is not online");
-        instance.getConfig().set("give.succuse", "&7New Backpack given to %s .");
-        instance.getConfig().set("clone.error", "&cYou can only use this command as a player!");
-        instance.getConfig().set("clone.succuse", "&7The backpack item has been cloned!");
-        instance.getConfig().set("clone.error2", "&cYou must be holding a backpack for this to work!");
-        instance.getConfig().set("rename.error", "&cError: You must be a player to use this command.");
-        instance.getConfig().set("rename.error2", "&cError: For information on how to use this command, type /backpacks help rename");
-        instance.getConfig().set("rename.error3", "&cError: You must be holding the backpack in your hand to rename it.");
-        instance.getConfig().set("rename.succuse", "&7Backpack renamed to %s &7.");
-        instance.getConfig().set("delete.error", "&cYou can only use this command as a player!");
-        instance.getConfig().set("delete.succuse", "&7The backpack has been delete!");
-        instance.getConfig().set("delete.error", "&cYou can only use this command as a player!");
+        this.getConfig().set("give.error", "&cError: For information on how to use this command, type /backpacks help give");
+        this.getConfig().set("give.error2", "&7The player %s is not online");
+        this.getConfig().set("give.succuse", "&7New Backpack given to %s .");
+        this.getConfig().set("clone.error", "&cYou can only use this command as a player!");
+        this.getConfig().set("clone.succuse", "&7The backpack item has been cloned!");
+        this.getConfig().set("clone.error2", "&cYou must be holding a backpack for this to work!");
+        this.getConfig().set("rename.error", "&cError: You must be a player to use this command.");
+        this.getConfig().set("rename.error2", "&cError: For information on how to use this command, type /backpacks help rename");
+        this.getConfig().set("rename.error3", "&cError: You must be holding the backpack in your hand to rename it.");
+        this.getConfig().set("rename.succuse", "&7Backpack renamed to %s &7.");
+        this.getConfig().set("delete.error", "&cYou can only use this command as a player!");
+        this.getConfig().set("delete.succuse", "&7The backpack has been delete!");
+        this.getConfig().set("delete.error", "&cYou can only use this command as a player!");
     }
 
     private void registerEvents() {
         final PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new InventoryEvents(instance), instance);
-        pm.registerEvents(new JoinLeaveEvents(instance), instance);
-        pm.registerEvents(new CraftingEvents(instance), instance);
+        pm.registerEvents(new InventoryEvents(), this);
+        pm.registerEvents(new JoinLeaveEvents(), this);
+        pm.registerEvents(new CraftingEvents(), this);
     }
 
     /**
      * 注册命令
      */
     private void registerCommands() {
-        adminCommand.registerCommand("create", injector.getSingleton(CreateCache.class));
+        adminCommand.registerCommand("create", injector.getSingleton(CreateCommand.class));
         adminCommand.registerCommand("give", injector.getSingleton(GiveCommand.class));
         adminCommand.registerCommand("clone", injector.getSingleton(CloneCommand.class));
         adminCommand.registerCommand("rename", injector.getSingleton(RenameCommand.class));
@@ -216,12 +205,14 @@ public class Main extends JavaPlugin {
         adminCommand.registerCommand("rebuildCache", injector.getSingleton(RebuildCacheCommand.class));
         adminCommand.registerCommand("viewall", injector.getSingleton(ViewAllCommand.class));
         adminCommand.registerCommand("help", injector.getSingleton(HelpCommand.class));
+
+        this.getCommand("backpacks").setExecutor(adminCommand::onCommand);
     }
 
     public boolean itemIsBackpack(final ItemStack item) {
         if (item != null && this.nmsUtil.getTag(item) != null && this.nmsUtil.hasKey(item, "backpack-item")) {
             final String backpackId = this.nmsUtil.getStringTag(item, "backpack-item");
-            final File file = new File(instance.getDataFolder() + File.separator + "backpacks", backpackId + ".yml");
+            final File file = new File(this.getDataFolder() + File.separator + "backpacks", backpackId + ".yml");
             if (file.exists()) {
                 return true;
             }
@@ -233,7 +224,7 @@ public class Main extends JavaPlugin {
     }
 
     public Backpack getBackpack(final UUID uuid) {
-        Backpack bp = BackPackCache.backpackMap.get(uuid);
+        Backpack bp = backPackCache.getBackpackMap().get(uuid);
         if (!bp.isInit()) {
             bp.load();
         }
@@ -241,15 +232,15 @@ public class Main extends JavaPlugin {
     }
 
     private File getBackpackFileByUUID(UUID uuid) {
-        return new File(instance.getDataFolder() + File.separator + "backpacks", uuid + ".yml");
+        return new File(this.getDataFolder() + File.separator + "backpacks", uuid + ".yml");
     }
 
     public void registerBackpack(final Backpack backpack) {
-        BackPackCache.backpackMap.put(backpack.getUniqueId(), backpack);
+        backPackCache.getBackpackMap().put(backpack.getUniqueId(), backpack);
     }
 
     public void unregisterBackpack(final Backpack backpack) {
-        BackPackCache.backpackMap.remove(backpack.getUniqueId());
+        backPackCache.getBackpackMap().remove(backpack.getUniqueId());
     }
 
     public PluginPlayer getPluginPlayer(final String id) {
@@ -258,7 +249,7 @@ public class Main extends JavaPlugin {
 
     private void linkPlayerToBackpack(final PluginPlayer pluginPlayer) {
         final String name = pluginPlayer.getPlayer().getName();
-        for (final Map.Entry<UUID, Backpack> entry : BackPackCache.backpackMap.entrySet()) {
+        for (final Map.Entry<UUID, Backpack> entry : backPackCache.getBackpackMap().entrySet()) {
             if (entry.getValue().getBackpackForName(name) != null) {
                 pluginPlayer.addBackpack(entry.getValue());
             }
@@ -275,7 +266,7 @@ public class Main extends JavaPlugin {
     }
 
     public String getPrefix() {
-        final String prefix = instance.getConfig().getString("prefix");
+        final String prefix = this.getConfig().getString("prefix");
         return (prefix != null && prefix.length() >= 1) ? (prefix + " ") : "";
     }
 
@@ -283,18 +274,14 @@ public class Main extends JavaPlugin {
         return this.nmsUtil;
     }
 
-    public Map<UUID, Backpack> getBackpackMap() {
-        return BackPackCache.backpackMap;
-    }
-
-    public static Main INSTANCE() {
-        return instance;
-    }
-
     private void registerBeans() {
-        injector = new InjectorBuilder().setPlugin(this).setDefaultPath("me.renner6895").build();
+        injector = new InjectorBuilder().setPlugin(this).setDefaultPath("me.renner6895.backpacks").build();
 
+        injector.register(Main.class,this);
         log = injector.register(Logger.class, this.getLogger());
+
         adminCommand = injector.register(PluginCommandMap.class, new PluginCommandMap(this));
+
+        backPackCache = injector.register(BackPackCache.class,new BackPackCache());
     }
 }

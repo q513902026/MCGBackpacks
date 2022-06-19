@@ -1,13 +1,12 @@
 package me.renner6895.backpacks;
 
+import com.google.common.collect.Maps;
+import me.hope.core.inject.annotation.Inject;
 import me.renner6895.backpacks.objects.Backpack;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
@@ -17,27 +16,42 @@ import java.util.logging.Logger;
  * @author xiaoyv_404
  */
 public class BackPackCache {
-
-    static Main plugin = Main.INSTANCE();
-
-    static Logger log = plugin.getLogger();
+    @Inject
+    private static Main plugin;
+    @Inject
+    private static Logger log;
 
     /**
      * 缓存存储位置
      **/
-    private static File backpackCacheFile;
+    private  File backpackCacheFile;
 
     /**
      * 背包缓存
      */
-    static FileConfiguration cache;
+    private FileConfiguration cache;
 
-    static Map<UUID, Backpack> backpackMap;
+    private Map<UUID, Backpack> backpackMap;
+    public BackPackCache(){
+        backpackMap = Maps.newHashMap();
 
+    }
+
+    public void linkYamlFileToMap() {
+        register();
+        for (File file: new File(plugin.getDataFolder()+File.separator + "backpacks").listFiles(new YamlFileFilter())){
+            Backpack bp = new Backpack(file);
+            this.backpackMap.put(bp.getUniqueId(),bp);
+        }
+    }
+
+    public Map<UUID,Backpack> getBackpackMap(){
+        return backpackMap;
+    }
     /**
      * 重载缓存流
      */
-    private static void reload() {
+    private void reload() {
         final InputStream defConfigStream = plugin.getResource("cache.yml");
         if (defConfigStream == null) {
             return;
@@ -49,7 +63,7 @@ public class BackPackCache {
      * 必须在registerBackpack之前运行
      * 用于加载存储的背包拥有者信息
      */
-    static void register() {
+     public void register() {
         backpackCacheFile = new File(plugin.getDataFolder(), "cache.yml");
         if (cache == null) {
             log.info("加载 背包缓存 ...");
@@ -104,5 +118,12 @@ public class BackPackCache {
 
     public boolean hasBackpackCache(String UUID) {
         return cache.contains(UUID);
+    }
+
+    static class YamlFileFilter implements FilenameFilter{
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.endsWith(".yml");
+        }
     }
 }

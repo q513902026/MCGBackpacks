@@ -50,7 +50,7 @@ public class ViewCommand extends HopeCommand {
             } catch (NumberFormatException ignored) {
             }
         }
-        final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory(new BackpackHolder(this.plugin, null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))), page2);
+        final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory(new BackpackHolder(null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))), page2);
         ((Player) commandSender).openInventory(inv);
         Main.log.info("玩家<" + commandSender.getName() + "> 正在查询玩家<" + bindID + ">的所有背包");
         return true;
