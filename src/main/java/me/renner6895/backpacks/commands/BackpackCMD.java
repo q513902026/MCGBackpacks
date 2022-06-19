@@ -41,56 +41,45 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("rebuildCache")) {
-                if (!this.checkPermission("backpacks.admin.view", sender, true)) {
-                    return false;
-                }
-                if (sender instanceof ConsoleCommandSender) {
-                    this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> Main.INSTANCE().buildCache());
-                    Main.log.info("正在异步建立缓存...");
-                }
-                return false;
-            } else {
-                if (!args[0].equalsIgnoreCase("viewall")) {
-                    return false;
-                }
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("viewall.error", "&cError: You must be a player to use this command.")));
-                    return false;
-                }
-                if (!this.checkPermission("backpacks.admin.viewall", sender, true)) {
-                    return false;
-                }
-                if (this.orderedBackpackMap == null || this.orderedBackpackMap.size() != this.plugin.getBackpackMap().size()) {
-                    this.orderedBackpackMap = new TreeMap<Double, Backpack>();
-                    for (final Backpack bp2 : this.plugin.getBackpackMap().values()) {
-                        double d2 = bp2.getSlots();
-                        for (boolean f2 = false; this.orderedBackpackMap.get(d2) != null && !f2; d2 += 0.001) {
-                        }
-                        this.orderedBackpackMap.put(d2, bp2);
-                    }
-                }
-                int page = 1;
-                if (args.length > 1) {
-                    try {
-                        page = Integer.parseInt(args[1]);
-                    } catch (NumberFormatException ex2) {
-                    }
-                }
-                final Inventory inv2 = Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing All &8page %s"), page)));
-                int counter2 = 0;
-                for (final Backpack backpack : this.orderedBackpackMap.values()) {
-                    if (counter2 >= (page - 1) * 54 && counter2 < page * 54) {
-                        inv2.addItem(new ItemStack[]{backpack.getItem()});
-                    }
-                    if (++counter2 >= page * 54) {
-                        break;
-                    }
-                }
-                ((Player) sender).openInventory(inv2);
-                Main.log.info("玩家<" + sender.getName() + "> 发起了查询所有背包的命令");
+            if (!args[0].equalsIgnoreCase("viewall")) {
                 return false;
             }
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("viewall.error", "&cError: You must be a player to use this command.")));
+                return false;
+            }
+            if (!this.checkPermission("backpacks.admin.viewall", sender, true)) {
+                return false;
+            }
+            if (this.orderedBackpackMap == null || this.orderedBackpackMap.size() != this.plugin.getBackpackMap().size()) {
+                this.orderedBackpackMap = new TreeMap<Double, Backpack>();
+                for (final Backpack bp2 : this.plugin.getBackpackMap().values()) {
+                    double d2 = bp2.getSlots();
+                    for (boolean f2 = false; this.orderedBackpackMap.get(d2) != null && !f2; d2 += 0.001) {
+                    }
+                    this.orderedBackpackMap.put(d2, bp2);
+                }
+            }
+            int page = 1;
+            if (args.length > 1) {
+                try {
+                    page = Integer.parseInt(args[1]);
+                } catch (NumberFormatException ex2) {
+                }
+            }
+            final Inventory inv2 = Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing All &8page %s"), page)));
+            int counter2 = 0;
+            for (final Backpack backpack : this.orderedBackpackMap.values()) {
+                if (counter2 >= (page - 1) * 54 && counter2 < page * 54) {
+                    inv2.addItem(new ItemStack[]{backpack.getItem()});
+                }
+                if (++counter2 >= page * 54) {
+                    break;
+                }
+            }
+            ((Player) sender).openInventory(inv2);
+            Main.log.info("玩家<" + sender.getName() + "> 发起了查询所有背包的命令");
+            return false;
         } else {
             if (args.length <= 1) {
                 final List<String> list2 = new ArrayList<String>();
