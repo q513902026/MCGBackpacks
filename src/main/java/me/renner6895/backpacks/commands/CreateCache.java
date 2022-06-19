@@ -5,6 +5,7 @@ import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.PluginPlayer;
+import me.renner6895.backpacks.tools.ColorTool;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -90,7 +91,7 @@ public class CreateCache extends HopeCommand {
         plugin.registerBackpack(backpack);
         pluginPlayer.addBackpack(backpack);
         player.getInventory().addItem(new ItemStack[]{backpack.getItem()});
-        player.sendMessage(BackpackCMD.color(plugin.getPrefix() + getFormatText()));
+        player.sendMessage(ColorTool.color(plugin.getPrefix() + getFormatText()));
     }
 
     private static String getFormatText() {
