@@ -1,6 +1,5 @@
 package me.renner6895.backpacks.commands;
 
-import com.google.common.collect.Lists;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.BackpackHolder;
@@ -43,31 +42,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("find")) {
-                if (!this.checkPermission("backpacks.admin.find", sender, true)) {
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("find.error", "&cError: You must be a player name use this command.")));
-                    return false;
-                }
-                final String bindID = args[1];
-                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID) == null ? findOfflinePlayerBackpacks(bindID) : this.plugin.getPluginPlayer(bindID).getBackpacks();
-                if (backpacks.size() == 0) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("find.error2", "&cError: You must be a vaild player name use this command.")));
-                    return false;
-                }
-                final List<String> list = Lists.newArrayList();
-                for (final Backpack backpack : backpacks) {
-                    list.add("Name:{" + backpack.getName() + "} | UUID:{" + backpack.getUniqueId().toString() + "} | Slot:{" + backpack.getSlots() + "} ");
-                }
-                sender.sendMessage(ColorTool.color(String.format("&3&m-----------------------%s&3&m---------------------------", bindID)));
-                for (final String message : list) {
-                    sender.sendMessage(message);
-                }
-                sender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
-                return false;
-            } else if (args[0].equalsIgnoreCase("view")) {
+            if (args[0].equalsIgnoreCase("view")) {
                 if (!this.checkPermission("backpacks.admin.view", sender, true)) {
                     return false;
                 }
@@ -276,16 +251,6 @@ public class BackpackCMD implements CommandExecutor {
             }
             return false;
         }
-    }
-
-    private List<Backpack> findOfflinePlayerBackpacks(String bindID) {
-        List<Backpack> backpacks = Lists.newArrayList();
-        for (Backpack backpack : plugin.getBackpackMap().values()) {
-            if (Backpack.isOwner(backpack, bindID)) {
-                backpacks.add(backpack);
-            }
-        }
-        return backpacks;
     }
 
     private boolean checkPermission(final String string, final CommandSender sender, final boolean sendMessage) {
