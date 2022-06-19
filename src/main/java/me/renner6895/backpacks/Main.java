@@ -286,6 +286,7 @@ public class Main extends JavaPlugin {
         adminCommand.registerCommand("reslot", injector.getSingleton(ReslotCommand.class));
         adminCommand.registerCommand("find", injector.getSingleton(FindCommand.class));
         adminCommand.registerCommand("view", injector.getSingleton(ViewCommand.class));
+        adminCommand.registerCommand("rebuildCache", injector.getSingleton(RebuildCacheCommand.class));
     }
 
     public boolean itemIsBackpack(final ItemStack item) {

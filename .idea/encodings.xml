@@ -5,6 +5,7 @@
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/DeleteCommand.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/FindCommand.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/GiveCommand.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/RebuildCacheCommand.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/RenameCommand.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/ReslotCommand.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/me/renner6895/backpacks/commands/ViewCommand.java" charset="UTF-8" />
