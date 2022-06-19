@@ -146,7 +146,7 @@ public class Main extends JavaPlugin {
         Main.defaultSlots = instance.getConfig().getInt("default-backpack.slots");
         Main.defaultItemId = instance.getConfig().getInt("default-backpack.item-id");
         Main.defaultItemData = (byte) instance.getConfig().getInt("default-backpack.item-data");
-        BackPackCache.backpackMap = new HashMap<UUID, Backpack>();
+        BackPackCache.backpackMap = new HashMap<>();
         for (File file : new File(instance.getDataFolder() + File.separator + "backpacks").listFiles()) {
             Backpack bp = new Backpack(file, instance);
             BackPackCache.backpackMap.put(bp.getUniqueId(), bp);
