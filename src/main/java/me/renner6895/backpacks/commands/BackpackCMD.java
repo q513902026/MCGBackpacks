@@ -3,7 +3,6 @@ package me.renner6895.backpacks.commands;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.BackpackHolder;
-import me.renner6895.backpacks.objects.PluginPlayer;
 import me.renner6895.backpacks.tools.ColorTool;
 import me.renner6895.backpacks.tools.FormatTool;
 import org.bukkit.Bukkit;
@@ -42,42 +41,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("view")) {
-                if (!this.checkPermission("backpacks.admin.view", sender, true)) {
-                    return false;
-                }
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("view.error", "&cError: You must be a player to use this command.")));
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("view.error", "&cError: You must be a player name use this command.")));
-                    return false;
-                }
-                final String bindID = args[1];
-                if (this.plugin.getPluginPlayer(bindID) == null) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("view.error3", "&cError: player must be online.")));
-                    return false;
-                }
-                PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(bindID);
-                final List<Backpack> backpacks = pluginPlayer.getBackpacks();
-                if (backpacks.size() == 0) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("view.error2", "&cError: You must be a vaild player name use this command.")));
-                    return false;
-                }
-                pluginPlayer.updateBackpackList();
-                int page2 = 1;
-                if (args.length > 2) {
-                    try {
-                        page2 = Integer.parseInt(args[2]);
-                    } catch (NumberFormatException ex) {
-                    }
-                }
-                final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))), page2);
-                ((Player) sender).openInventory(inv);
-                Main.log.info("玩家<" + sender.getName() + "> 正在查询玩家<" + bindID + ">的所有背包");
-                return false;
-            } else if (args[0].equalsIgnoreCase("rebuildCache")) {
+            if (args[0].equalsIgnoreCase("rebuildCache")) {
                 if (!this.checkPermission("backpacks.admin.view", sender, true)) {
                     return false;
                 }
