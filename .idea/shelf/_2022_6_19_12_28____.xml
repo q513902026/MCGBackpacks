@@ -1,0 +1,14 @@
+<changelist name="在进行更新之前于_2022_6_19_12_28_取消提交了变更_[变更]" date="1655612947857" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2022_6_19_12_28_取消提交了变更_[变更]/shelved.patch" />
+  <option name="DESCRIPTION" value="在进行更新之前于 2022/6/19 12:28 取消提交了变更 [变更]" />
+  <binary>
+    <option name="BEFORE_PATH" value=".idea/sonarlint/issuestore/a/9/a9e898073d1d0ab0214cf2c3c9a94317d9d807fd" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".idea/sonarlint/issuestore/e/2/e2ebea57460f06ec85c523c03fcb718f1debd1fc" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+</changelist>
