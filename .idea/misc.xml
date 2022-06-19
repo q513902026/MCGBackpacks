@@ -4,6 +4,9 @@
     <list size="1">
       <item index="0" class="java.lang.String" itemvalue="org.bukkit.event.EventHandler" />
     </list>
+    <writeAnnotations>
+      <writeAnnotation name="me.hope.core.inject.annotation.Inject" />
+    </writeAnnotations>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />

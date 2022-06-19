@@ -45,23 +45,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("clone")) {
-                if (!this.checkPermission("backpacks.edit.clone", sender, true)) {
-                    return false;
-                }
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("clone.error", "&cYou can only use this command as a player!")));
-                    return false;
-                }
-                final Player player = (Player) sender;
-                if (this.plugin.itemIsBackpack(player.getInventory().getItemInMainHand())) {
-                    player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("clone.succuse", "&7The backpack item has been cloned!")));
-                } else {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("clone.error2", "&cYou must be holding a backpack for this to work!")));
-                }
-                return false;
-            } else if (args[0].equalsIgnoreCase("rename")) {
+            if (args[0].equalsIgnoreCase("rename")) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error", "&cError: You must be a player to use this command.")));
                     return false;
