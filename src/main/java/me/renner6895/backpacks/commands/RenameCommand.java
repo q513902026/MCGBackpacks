@@ -1,5 +1,6 @@
 package me.renner6895.backpacks.commands;
 
+import me.hope.core.inject.annotation.CommandPermission;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
 import me.renner6895.backpacks.objects.Backpack;
@@ -15,17 +16,13 @@ import java.util.UUID;
 /**
  * @author xiaoyv_404
  */
+@CommandPermission(value = "backpacks.edit.rename",onlyConsole = true)
 public class RenameCommand extends HopeCommand {
 
     Main plugin = getPlugin();
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error", "&cError: You must be a player to use this command.")));
-            return false;
-        }
-
         if (strings.length < 2) {
             commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error2", "&cError: For information on how to use this command, type /backpacks help rename")));
             return false;
