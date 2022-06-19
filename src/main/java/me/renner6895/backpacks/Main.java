@@ -5,6 +5,7 @@ import me.hope.core.PluginCommandMap;
 import me.hope.core.inject.Injector;
 import me.hope.core.inject.InjectorBuilder;
 import me.renner6895.backpacks.commands.BackpackCMD;
+import me.renner6895.backpacks.commands.CreateCache;
 import me.renner6895.backpacks.events.CraftingEvents;
 import me.renner6895.backpacks.events.InventoryEvents;
 import me.renner6895.backpacks.events.JoinLeaveEvents;
@@ -280,8 +281,7 @@ public class Main extends JavaPlugin {
      */
     private void registerCommands() {
         adminCommand.registerCommand("backpack", new BackpackCMD(plugin));
-        adminCommand.registerCommand("backpacks", new BackpackCMD(plugin));
-        adminCommand.registerCommand("bp", new BackpackCMD(plugin));
+        adminCommand.registerCommand("create", injector.getSingleton(CreateCache.class));
     }
 
     public boolean itemIsBackpack(final ItemStack item) {

@@ -13,14 +13,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -46,13 +44,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("create")) {
-                if (!this.checkPermission("backpacks.admin.create", sender, true)) {
-                    return false;
-                }
-                this.createBackpack((Player) sender, args);
-                return false;
-            } else if (args[0].equalsIgnoreCase("give")) {
+            if (args[0].equalsIgnoreCase("give")) {
                 if (!this.checkPermission("backpacks.admin.give", sender, true)) {
                     return false;
                 }
@@ -65,7 +57,7 @@ public class BackpackCMD implements CommandExecutor {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + String.format(this.getFormatText("give.error2", "&7The player %s is not online"), args[1])));
                     return false;
                 }
-                this.createBackpack(player, args);
+                CreateCache.createBackpack(player, args);
                 sender.sendMessage(this.color(this.plugin.getPrefix() + String.format(this.getFormatText("give.succuse", "&7New Backpack given to %s ."), args[1])));
                 return false;
             } else if (args[0].equalsIgnoreCase("clone")) {
@@ -79,7 +71,7 @@ public class BackpackCMD implements CommandExecutor {
                 final Player player = (Player) sender;
                 if (this.plugin.itemIsBackpack(player.getInventory().getItemInMainHand())) {
                     player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
-                    sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("clone.succuse", "&7The backpack item has been cloned!")));
+                    sender.sendMessage(color(this.plugin.getPrefix() + this.getFormatText("clone.succuse", "&7The backpack item has been cloned!")));
                 } else {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("clone.error2", "&cYou must be holding a backpack for this to work!")));
                 }
@@ -177,8 +169,8 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final String bindID = args[1];
-                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID) ==null ? findOfflinePlayerBackpacks(bindID) : this.plugin.getPluginPlayer(bindID).getBackpacks();
-                if(backpacks.size() == 0 ){
+                final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID) == null ? findOfflinePlayerBackpacks(bindID) : this.plugin.getPluginPlayer(bindID).getBackpacks();
+                if (backpacks.size() == 0) {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("find.error2", "&cError: You must be a vaild player name use this command.")));
                     return false;
                 }
@@ -186,7 +178,7 @@ public class BackpackCMD implements CommandExecutor {
                 for (final Backpack backpack : backpacks) {
                     list.add("Name:{" + backpack.getName() + "} | UUID:{" + backpack.getUniqueId().toString() + "} | Slot:{" + backpack.getSlots() + "} ");
                 }
-                sender.sendMessage(this.color(String.format("&3&m-----------------------%s&3&m---------------------------",bindID)));
+                sender.sendMessage(this.color(String.format("&3&m-----------------------%s&3&m---------------------------", bindID)));
                 for (final String message : list) {
                     sender.sendMessage(message);
                 }
@@ -205,13 +197,13 @@ public class BackpackCMD implements CommandExecutor {
                     return false;
                 }
                 final String bindID = args[1];
-                if (this.plugin.getPluginPlayer(bindID) ==null){
+                if (this.plugin.getPluginPlayer(bindID) == null) {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("view.error3", "&cError: player must be online.")));
                     return false;
                 }
                 PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(bindID);
-                final List<Backpack> backpacks =  pluginPlayer.getBackpacks();
-                if(backpacks.size() == 0 ){
+                final List<Backpack> backpacks = pluginPlayer.getBackpacks();
+                if (backpacks.size() == 0) {
                     sender.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("view.error2", "&cError: You must be a vaild player name use this command.")));
                     return false;
                 }
@@ -223,16 +215,16 @@ public class BackpackCMD implements CommandExecutor {
                     } catch (NumberFormatException ex) {
                     }
                 }
-                final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, this.color(String.format(this.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))),page2);
+                final Inventory inv = pluginPlayer.getBackpackListInv(Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, this.color(String.format(this.getFormatText("viewall.succuse", "Backpacks - &4Viewing %s &8page %s"), bindID, page2))), page2);
                 ((Player) sender).openInventory(inv);
-                Main.log.info("玩家<"+sender.getName()+"> 正在查询玩家<"+bindID+">的所有背包");
+                Main.log.info("玩家<" + sender.getName() + "> 正在查询玩家<" + bindID + ">的所有背包");
                 return false;
-            }else if (args[0].equalsIgnoreCase("rebuildCache")){
+            } else if (args[0].equalsIgnoreCase("rebuildCache")) {
                 if (!this.checkPermission("backpacks.admin.view", sender, true)) {
                     return false;
                 }
-                if (sender instanceof ConsoleCommandSender){
-                    this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin,() ->Main.INSTANCE().buildCache());
+                if (sender instanceof ConsoleCommandSender) {
+                    this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> Main.INSTANCE().buildCache());
                     Main.log.info("正在异步建立缓存...");
                 }
                 return false;
@@ -274,7 +266,7 @@ public class BackpackCMD implements CommandExecutor {
                     }
                 }
                 ((Player) sender).openInventory(inv2);
-                Main.log.info("玩家<"+sender.getName()+"> 发起了查询所有背包的命令");
+                Main.log.info("玩家<" + sender.getName() + "> 发起了查询所有背包的命令");
                 return false;
             }
         } else {
@@ -315,7 +307,7 @@ public class BackpackCMD implements CommandExecutor {
                     list2.add(this.color("&3/backpack view {player} <page>"));
                     list2.add(this.color("&7/backpack help view"));
                 }
-                if (sender instanceof ConsoleCommandSender){
+                if (sender instanceof ConsoleCommandSender) {
                     list2.add(this.color("&3/backpack rebuildCache"));
                 }
                 list2.add(this.color("&3&m-----------------------------------------------------"));
@@ -405,8 +397,8 @@ public class BackpackCMD implements CommandExecutor {
 
     private List<Backpack> findOfflinePlayerBackpacks(String bindID) {
         List<Backpack> backpacks = Lists.newArrayList();
-        for(Backpack backpack: plugin.getBackpackMap().values()){
-            if(Backpack.isOwner(backpack,bindID)){
+        for (Backpack backpack : plugin.getBackpackMap().values()) {
+            if (Backpack.isOwner(backpack, bindID)) {
                 backpacks.add(backpack);
             }
         }
@@ -416,7 +408,7 @@ public class BackpackCMD implements CommandExecutor {
     private boolean checkPermission(final String string, final CommandSender sender, final boolean sendMessage) {
         if (!sender.hasPermission(string)) {
             if (sendMessage) {
-                sender.sendMessage(this.color(this.plugin.getPrefix() + String.format(this.getFormatText("permission.error", "&cYou do not have permission to use this command! (%s)"), string)));
+                sender.sendMessage(color(this.plugin.getPrefix() + String.format(getFormatText("permission.error", "&cYou do not have permission to use this command! (%s)"), string)));
                 Main.log.info("User " + sender.getName() + " was denied access to a command. (" + string + ")");
             }
             return false;
@@ -424,69 +416,8 @@ public class BackpackCMD implements CommandExecutor {
         return true;
     }
 
-    private String color(final String string) {
+    static String color(final String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
-    }
-
-    private void createBackpack(final Player player, final String[] args) {
-        int slots = Main.defaultSlots;
-        String name = ChatColor.translateAlternateColorCodes('&', Main.defaultName);
-        int itemId = Main.defaultItemId;
-        short itemData = Main.defaultItemData;
-        String id = player.getName();
-        final String[] var10 = args;
-        for (int var11 = args.length, var12 = 0; var12 < var11; ++var12) {
-            final String s = var10[var12];
-            if (s.toLowerCase().startsWith("slots:")) {
-                try {
-                    slots = Integer.parseInt(s.substring("slots:".length()));
-                } catch (NumberFormatException var14) {
-                    slots = Main.defaultSlots;
-                }
-                if (slots < 1 || slots > 54) {
-                    slots = Main.defaultSlots;
-                }
-            } else if (s.toLowerCase().startsWith("name:")) {
-                name = ChatColor.translateAlternateColorCodes('&', s.substring("name:".length()).replace("_", " "));
-            } else if (s.toLowerCase().startsWith("item:")) {
-                final String item = s.substring("item:".length());
-                try {
-                    itemId = Integer.parseInt(item.split(":")[0]);
-                } catch (NumberFormatException ex) {
-                }
-                try {
-                    itemData = (short) Integer.parseInt(item.split(":")[1]);
-                } catch (ArrayIndexOutOfBoundsException ex2) {
-                } catch (NumberFormatException ex3) {
-                }
-            } else if (s.toLowerCase().startsWith("bind:")) {
-                final String bindName = s.substring("bind:".length());
-                final Player bindPlayer = Bukkit.getPlayer(bindName);
-                if (bindPlayer != null) {
-                    id = bindPlayer.getName();
-                }
-            }
-        }
-        final UUID randomId = UUID.randomUUID();
-        final File file = new File(this.plugin.getDataFolder() + File.separator + "backpacks", randomId + ".yml");
-        final FileConfiguration fileConfig = (FileConfiguration) YamlConfiguration.loadConfiguration(file);
-        fileConfig.set("slots", (Object) slots);
-        fileConfig.set("name", (Object) name);
-        fileConfig.set("item-id", (Object) itemId);
-        fileConfig.set("item-data", (Object) itemData);
-        fileConfig.set("bind-id", (Object) id);
-        try {
-            fileConfig.save(file);
-        } catch (IOException var13) {
-            var13.printStackTrace();
-        }
-        final Backpack backpack = new Backpack(file, this.plugin);
-        backpack.load();
-        final PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(id);
-        this.plugin.registerBackpack(backpack);
-        pluginPlayer.addBackpack(backpack);
-        player.getInventory().addItem(new ItemStack[]{backpack.getItem()});
-        player.sendMessage(this.color(this.plugin.getPrefix() + this.getFormatText("backpack.give", "&7You were given a new Backpack!")));
     }
 
     private void removeBackPacks(final Backpack backpack) {
