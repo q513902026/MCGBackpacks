@@ -12,7 +12,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -23,7 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.UUID;
 
 public class BackpackCMD implements CommandExecutor {
     private Main plugin;
@@ -45,44 +43,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("reslot")) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("reslot.error", "&cError: You must be a player to use this command.")));
-                    return false;
-                }
-                if (!this.checkPermission("backpacks.edit.reslot", sender, true)) {
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("reslot.error2", "&cError: For information on how to use this command, type /backpacks help reslot")));
-                    return false;
-                }
-                int page;
-                try {
-                    page = Integer.parseInt(args[1]);
-                } catch (NumberFormatException var18) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("reslot.error3", "&cError: For information on how to use this command, type /backpacks help reslot")));
-                    return false;
-                }
-                if (page < 1 || page > 54) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("reslot.error3", "&cError: For information on how to use this command, type /backpacks help reslot")));
-                    return false;
-                }
-                final Player player2 = (Player) sender;
-                final ItemStack item2 = player2.getInventory().getItemInMainHand();
-                if (!this.plugin.itemIsBackpack(item2)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("reslot.error4", "&cError: You must be holding the backpack in your hand to reslot it.")));
-                    return false;
-                }
-                final String backpackId = ((MemorySection) this.plugin.getNmsUtil().getTag(item2)).getString("backpack-item");
-                final Backpack backpack = this.plugin.getBackpack(UUID.fromString(backpackId));
-                backpack.updateSlots(page);
-                final ItemStack newBPItem = backpack.getItem();
-                newBPItem.setAmount(item2.getAmount());
-                player2.getInventory().setItemInMainHand(newBPItem);
-                sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("reslot.succuse", "&7Backpack reslotted to  %s slots&7."), page)));
-                return false;
-            } else if (args[0].equalsIgnoreCase("find")) {
+            if (args[0].equalsIgnoreCase("find")) {
                 if (!this.checkPermission("backpacks.admin.find", sender, true)) {
                     return false;
                 }
