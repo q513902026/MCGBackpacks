@@ -277,7 +277,6 @@ public class Main extends JavaPlugin {
      * 注册命令
      */
     private void registerCommands() {
-        adminCommand.registerCommand("backpack", new BackpackCMD(plugin));
         adminCommand.registerCommand("create", injector.getSingleton(CreateCache.class));
         adminCommand.registerCommand("give", injector.getSingleton(GiveCommand.class));
         adminCommand.registerCommand("clone", injector.getSingleton(CloneCommand.class));
