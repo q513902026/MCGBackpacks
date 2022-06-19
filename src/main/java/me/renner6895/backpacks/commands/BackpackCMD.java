@@ -1,86 +1,24 @@
 package me.renner6895.backpacks.commands;
 
 import me.renner6895.backpacks.Main;
-import me.renner6895.backpacks.objects.Backpack;
-import me.renner6895.backpacks.objects.BackpackHolder;
 import me.renner6895.backpacks.tools.ColorTool;
-import me.renner6895.backpacks.tools.FormatTool;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 public class BackpackCMD implements CommandExecutor {
     private Main plugin;
-    private TreeMap<Double, Backpack> orderedBackpackMap;
-    private TreeMap<Double, Backpack> orderedPlayerBackpackMap;
 
     public BackpackCMD(final Main plugin) {
         this.plugin = plugin;
     }
 
-    private String getFormatText(final String key, final String defval) {
-        final FileConfiguration config = this.plugin.getConfig();
-        if (config.getConfigurationSection("lang." + key) == null) {
-            config.set("lang." + key, (Object) defval);
-        }
-        this.plugin.saveConfig();
-        return config.getString("lang." + key);
-    }
-
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (!args[0].equalsIgnoreCase("viewall")) {
-                return false;
-            }
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("viewall.error", "&cError: You must be a player to use this command.")));
-                return false;
-            }
-            if (!this.checkPermission("backpacks.admin.viewall", sender, true)) {
-                return false;
-            }
-            if (this.orderedBackpackMap == null || this.orderedBackpackMap.size() != this.plugin.getBackpackMap().size()) {
-                this.orderedBackpackMap = new TreeMap<Double, Backpack>();
-                for (final Backpack bp2 : this.plugin.getBackpackMap().values()) {
-                    double d2 = bp2.getSlots();
-                    for (boolean f2 = false; this.orderedBackpackMap.get(d2) != null && !f2; d2 += 0.001) {
-                    }
-                    this.orderedBackpackMap.put(d2, bp2);
-                }
-            }
-            int page = 1;
-            if (args.length > 1) {
-                try {
-                    page = Integer.parseInt(args[1]);
-                } catch (NumberFormatException ex2) {
-                }
-            }
-            final Inventory inv2 = Bukkit.createInventory((InventoryHolder) new BackpackHolder(this.plugin, null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing All &8page %s"), page)));
-            int counter2 = 0;
-            for (final Backpack backpack : this.orderedBackpackMap.values()) {
-                if (counter2 >= (page - 1) * 54 && counter2 < page * 54) {
-                    inv2.addItem(new ItemStack[]{backpack.getItem()});
-                }
-                if (++counter2 >= page * 54) {
-                    break;
-                }
-            }
-            ((Player) sender).openInventory(inv2);
-            Main.log.info("玩家<" + sender.getName() + "> 发起了查询所有背包的命令");
-            return false;
-        } else {
             if (args.length <= 1) {
                 final List<String> list2 = new ArrayList<String>();
                 list2.add(ColorTool.color("&3&m----------------------&3[&bBackpacks&3]&m---------------------"));
@@ -204,23 +142,6 @@ public class BackpackCMD implements CommandExecutor {
             }
             return false;
         }
-    }
-
-    private boolean checkPermission(final String string, final CommandSender sender, final boolean sendMessage) {
-        if (!sender.hasPermission(string)) {
-            if (sendMessage) {
-                sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("permission.error", "&cYou do not have permission to use this command! (%s)"), string)));
-                Main.log.info("User " + sender.getName() + " was denied access to a command. (" + string + ")");
-            }
-            return false;
-        }
-        return true;
-    }
-
-    private void removeBackPacks(final Backpack backpack) {
-        final File file = new File(this.plugin.getDataFolder() + File.separator + "backpacks", backpack.getUniqueId() + ".yml");
-        this.plugin.unregisterBackpack(backpack);
-        this.plugin.getPluginPlayer(backpack.getBindID()).removeBackpack(backpack);
-        file.delete();
+        return false;
     }
 }
