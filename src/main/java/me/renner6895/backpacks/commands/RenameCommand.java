@@ -15,6 +15,7 @@ import java.util.UUID;
 
 /**
  * @author xiaoyv_404
+ * todo 修改成onlyPlayer
  */
 @CommandPermission(value = "backpacks.edit.rename",onlyConsole = true)
 public class RenameCommand extends HopeCommand {

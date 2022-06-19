@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 /**
  * @author xiaoyv_404
+ * todo 修改成onlyPlayer
  */
 @CommandPermission(value = "backpacks.edit.clone",onlyConsole = true)
 public class CloneCommand extends HopeCommand {

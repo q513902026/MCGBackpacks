@@ -35,17 +35,9 @@ _
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 o
 ?src/main/java/me/renner6895/backpacks/objects/PluginPlayer.java,4\b\4b107eb76be8b5deb55a582e34675501ccf45b47
-k
-;src/main/java/me/renner6895/backpacks/commands/TestCMD.java,8\7\87e8b596599858cab30537ddd3bc751e311f8100
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-o
-?src/main/java/me/renner6895/backpacks/commands/GiveCommand.java,2\e\2e3cfc07a7cc70c5d8ed33ac71bb6fb33f4a2906
 k
 ;src/main/java/me/renner6895/backpacks/tools/FormatTool.java,e\2\e2ebea57460f06ec85c523c03fcb718f1debd1fc
-p
-@src/main/java/me/renner6895/backpacks/commands/CloneCommand.java,d\3\d3e07b591bcaef450a3e0f04367129cadcda2984
-o
-?src/main/java/me/renner6895/backpacks/commands/CreateCache.java,c\9\c93bf119f50f8a8123129e6c7a3112a34ad0112e
 j
 :src/main/java/me/renner6895/backpacks/tools/ColorTool.java,a\9\a9e898073d1d0ab0214cf2c3c9a94317d9d807fd

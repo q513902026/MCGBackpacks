@@ -45,27 +45,7 @@ public class BackpackCMD implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
-            if (args[0].equalsIgnoreCase("delete")) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("delete.error", "&cYou can only use this command as a player!")));
-                    return false;
-                }
-                if (!this.checkPermission("backpacks.edit.delete", sender, true)) {
-                    return false;
-                }
-                final Player player = (Player) sender;
-                final ItemStack item = player.getInventory().getItemInMainHand();
-                if (this.plugin.itemIsBackpack(item)) {
-                    final String backpackId2 = this.plugin.getNmsUtil().getStringTag(item, "backpack-item");
-                    final Backpack backpack2 = this.plugin.getBackpack(UUID.fromString(backpackId2));
-                    backpack2.removeBackpack();
-                    item.setAmount(0);
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("delete.succuse", "&7The backpack has been delete!")));
-                } else {
-                    sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("delete.error2", "&cYou must be holding a backpack for this to work!")));
-                }
-                return false;
-            } else if (args[0].equalsIgnoreCase("reslot")) {
+            if (args[0].equalsIgnoreCase("reslot")) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("reslot.error", "&cError: You must be a player to use this command.")));
                     return false;
