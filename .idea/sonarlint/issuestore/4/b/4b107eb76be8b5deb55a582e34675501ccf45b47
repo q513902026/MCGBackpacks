@@ -1,0 +1,8 @@
+
+o
+java:S2293!"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÿή»Θ
+
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ε¶ϋÿÿÿÿ
+>	java:S108$")Either remove or fill this block of code.(Ο½·
+N
+java:S38780"8Remove this array creation and simply pass the elements.(όσ΄ϊ

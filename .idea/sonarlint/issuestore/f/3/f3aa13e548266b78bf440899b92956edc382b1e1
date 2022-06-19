@@ -1,0 +1,12 @@
+
+e
+java:S1192"ODefine a constant instead of duplicating this literal "BlockEntityTag" 3 times.(ä˜¾
+P
+java:S1141I"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+U
+java:S1118":Add a private constructor to hide the implicit public one.(İÊ¼Ôøÿÿÿÿ
+>	java:S1081")Either remove or fill this block of code.(Ãôş•
+G
+java:S1144"1Remove this unused private "getNBTString" method.(£ßîØ
+F
+java:S1144*"1Remove this unused private "setNBTString" method.(œíR
