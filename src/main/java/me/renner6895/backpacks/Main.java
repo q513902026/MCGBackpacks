@@ -10,6 +10,7 @@ import me.renner6895.backpacks.events.JoinLeaveEvents;
 import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.PluginPlayer;
 import me.renner6895.backpacks.objects.SlotFiller;
+import me.renner6895.backpacks.tools.ColorTool;
 import me.renner6895.nmstag.NMSUtil;
 import me.renner6895.nmstag.NMSUtil_1_12;
 import org.bukkit.Bukkit;
@@ -98,7 +99,7 @@ public class Main extends JavaPlugin {
         this.registerFiles();
         this.registerConfig();
         this.registerEvents();
-        registerCommands();
+        this.registerCommands();
         long lastTime = System.currentTimeMillis();
         this.registerBackpacks();
         log.info("Register Backpacks Time-Consuming: " + (System.currentTimeMillis() - lastTime) + " ms");
@@ -207,8 +208,9 @@ public class Main extends JavaPlugin {
         adminCommand.registerCommand("rebuildCache", injector.getSingleton(RebuildCacheCommand.class));
         adminCommand.registerCommand("viewall", injector.getSingleton(ViewAllCommand.class));
         adminCommand.registerCommand("help", injector.getSingleton(HelpCommand.class));
+        adminCommand.registerCommand("info",injector.getSingleton(InfoCommand.class));
 
-        this.getCommand("backpacks").setExecutor(adminCommand::onCommand);
+        this.getCommand("backpacks").setExecutor(adminCommand);
     }
 
     public boolean itemIsBackpack(final ItemStack item) {
@@ -282,7 +284,7 @@ public class Main extends JavaPlugin {
         injector.register(Main.class,this);
         log = injector.register(Logger.class, this.getLogger());
 
-        adminCommand = injector.register(PluginCommandMap.class, new PluginCommandMap(this));
+        adminCommand = injector.register(PluginCommandMap.class, new PluginCommandMap<>(this));
 
         backPackCache = injector.register(BackPackCache.class,new BackPackCache());
     }
@@ -290,6 +292,14 @@ public class Main extends JavaPlugin {
         if (this.itemIsBackpack(stack)){
             final String backpackId = this.nmsUtil.getStringTag(stack, "backpack-item");
             return Optional.of(getBackpack(UUID.fromString(backpackId)));
+        }
+        return Optional.empty();
+    }
+    public Optional<Backpack> getBackpackByUUIDString(String UUIDString){
+        try{
+            return Optional.of(getBackpack(UUID.fromString(UUIDString)));
+        }catch (IllegalArgumentException exception){
+            log.warning("错误的UUID格式");
         }
         return Optional.empty();
     }

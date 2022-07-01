@@ -26,15 +26,13 @@ import java.util.UUID;
 @CommandPermission("backpacks.admin.create")
 public class CreateCommand extends HopeCommand {
 
-    static Main plugin = getPlugin();
-
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         createBackpack((Player) commandSender, args);
         return true;
     }
 
-    public static void createBackpack(final Player player, final String[] args) {
+    public static void createBackpack(Player player, final String[] args) {
         int slots = Main.defaultSlots;
         String name = ChatColor.translateAlternateColorCodes('&', Main.defaultName);
         int itemId = Main.defaultItemId;
@@ -87,20 +85,15 @@ public class CreateCommand extends HopeCommand {
         }
         final Backpack backpack = new Backpack(file);
         backpack.load();
-        final PluginPlayer pluginPlayer = plugin.getPluginPlayer(id);
-        plugin.registerBackpack(backpack);
+        final PluginPlayer pluginPlayer = getPlugin().getPluginPlayer(id);
+        getPlugin().registerBackpack(backpack);
         pluginPlayer.addBackpack(backpack);
         player.getInventory().addItem(new ItemStack[]{backpack.getItem()});
-        player.sendMessage(ColorTool.color(plugin.getPrefix() + getFormatText()));
+        player.sendMessage(ColorTool.color(getPlugin().getPrefix() + getFormatText()));
     }
 
     private static String getFormatText() {
-        final FileConfiguration config = plugin.getConfig();
-        if (config.getConfigurationSection("lang." + "backpack.give") == null) {
-            config.set("lang." + "backpack.give", "&7You were given a new Backpack!");
-        }
-        plugin.saveConfig();
-        return config.getString("lang." + "backpack.give");
+        return getPlugin().getConfig().getString("lang.backpack.give","&7You were given a new Backpack!");
     }
 
 }

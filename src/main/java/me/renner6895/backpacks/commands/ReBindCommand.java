@@ -35,10 +35,9 @@ public class ReBindCommand extends HopeCommand {
                 bindPlayerOptional = Optional.of(getPlugin().getServer().getPlayerExact(args[0]));
             }
         }else if (args.length >= 2 ){
-            try{
-                backpackOptional = Optional.of(getPlugin().getBackpack(UUID.fromString(args[0])));
-            }catch (IllegalArgumentException exception){
-                commandSender.sendMessage(ColorTool.color(getPlugin().getPrefix()+": 不合法的UUID "));
+            backpackOptional = getPlugin().getBackpackByUUIDString(args[0]);
+            if (!backpackOptional.isPresent()){
+                commandSender.sendMessage(ColorTool.color(getPlugin().getPrefix()+": 不合法的UUID或不存在的UUID "));
                 return false;
             }
             if(args.length == 3){
@@ -69,6 +68,10 @@ public class ReBindCommand extends HopeCommand {
         return false;
     }
     private void rebindBackpack(Backpack backpack,String bindName,CommandSender sender){
+        if (bindName.isEmpty()){
+            sender.sendMessage(ColorTool.color(getPlugin().getPrefix()+"绑定人名称不可为空"));
+            return;
+        }
         backpack.rebind(bindName);
         sender.sendMessage(ColorTool.color(getPlugin().getPrefix()+":成功将背包绑定到 "+bindName+" ."));
     }
