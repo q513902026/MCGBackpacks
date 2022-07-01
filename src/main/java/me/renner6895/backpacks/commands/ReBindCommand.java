@@ -23,12 +23,14 @@ public class ReBindCommand extends HopeCommand {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        Optional<Backpack> backpackOptional = null;
-        Optional<Player> bindPlayerOptional = null;
+        Optional<Backpack> backpackOptional = Optional.empty();
+        Optional<Player> bindPlayerOptional = Optional.empty();
+        Optional<ItemStack> playerItemStackOptional = Optional.empty();
         if (args.length == 1){
             if (commandSender instanceof Player){
                 Player commandPlayer = (Player) commandSender;
                 ItemStack mainItemStack = commandPlayer.getInventory().getItemInMainHand();
+                playerItemStackOptional = Optional.of(mainItemStack);
                 backpackOptional = getPlugin().getBackpackByItem(mainItemStack);
                 bindPlayerOptional = Optional.of(getPlugin().getServer().getPlayerExact(args[0]));
             }
@@ -54,7 +56,12 @@ public class ReBindCommand extends HopeCommand {
 
         }
         if (backpackOptional.isPresent() && bindPlayerOptional.isPresent()){
-            rebindBackpack(backpackOptional.get(),bindPlayerOptional.get().getName(),commandSender);
+            Backpack backpack = backpackOptional.get();
+            rebindBackpack(backpack,bindPlayerOptional.get().getName(),commandSender);
+            if (playerItemStackOptional.isPresent()){
+                playerItemStackOptional.get().setAmount(0);
+                ((Player) commandSender).getInventory().addItem(backpack.getItem());
+            }
             return true;
         }else{
             commandSender.sendMessage(ColorTool.color(getPlugin().getPrefix()+": 玩家不在线|不存在的UUID"));

@@ -29,12 +29,12 @@ public class CreateCommand extends HopeCommand {
     static Main plugin = getPlugin();
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        createBackpack((Player) commandSender, strings);
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        createBackpack((Player) commandSender, args);
         return true;
     }
 
-    static void createBackpack(final Player player, final String[] args) {
+    public static void createBackpack(final Player player, final String[] args) {
         int slots = Main.defaultSlots;
         String name = ChatColor.translateAlternateColorCodes('&', Main.defaultName);
         int itemId = Main.defaultItemId;

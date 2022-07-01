@@ -23,8 +23,8 @@ public class RenameCommand extends HopeCommand {
     Main plugin = getPlugin();
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length < 1) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if (args.length < 1) {
             commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error2", "&cError: For information on how to use this command, type /backpacks help rename")));
             return false;
         }
@@ -34,7 +34,7 @@ public class RenameCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("rename.error3", "&cError: You must be holding the backpack in your hand to rename it.")));
             return false;
         }
-        final String name = strings[1].replaceAll("_", " ");
+        final String name = args[0].replaceAll("_", " ");
         final String backpackId = this.plugin.getNmsUtil().getStringTag(item, "backpack-item");
         final Backpack backpack = this.plugin.getBackpack(UUID.fromString(backpackId));
         backpack.updateName(name);

@@ -18,18 +18,18 @@ public class GiveCommand extends HopeCommand {
     Main plugin = getPlugin();
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length < 1) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if (args.length < 1) {
             commandSender.sendMessage(ColorTool.color(plugin.getPrefix() + FormatTool.getFormatText("give.error", "&cError: For information on how to use this command, type /backpacks help give")));
             return false;
         }
-        final Player player = Bukkit.getPlayer(strings[1]);
+        final Player player = Bukkit.getPlayer(args[0]);
         if (player == null) {
-            commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.error2", "&7The player %s is not online"), strings[1])));
+            commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.error2", "&7The player %s is not online"), args[0])));
             return false;
         }
-        CreateCommand.createBackpack(player, strings);
-        commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.succuse", "&7New Backpack given to %s ."), strings[1])));
+        CreateCommand.createBackpack(player, args);
+        commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.succuse", "&7New Backpack given to %s ."), args[0])));
         return true;
     }
 }

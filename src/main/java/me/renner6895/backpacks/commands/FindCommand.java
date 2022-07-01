@@ -25,27 +25,27 @@ public class FindCommand extends HopeCommand {
     private static BackPackCache backPackCache;
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length < 1) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if (args.length < 1) {
             commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("find.error", "&cError: You must be a player name use this command.")));
             return false;
         }
-        final String bindID = strings[1];
+        final String bindID = args[0];
         final List<Backpack> backpacks = this.plugin.getPluginPlayer(bindID) == null ? findOfflinePlayerBackpacks(bindID) : this.plugin.getPluginPlayer(bindID).getBackpacks();
         if (backpacks.isEmpty()) {
             commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("find.error2", "&cError: You must be a vaild player name use this command.")));
             return false;
         }
-        final List<String> list = Lists.newArrayList();
+        final List<String> backpackInfoList = Lists.newArrayList();
         for (final Backpack backpack : backpacks) {
-            list.add("Name:{" + backpack.getName() + "} | UUID:{" + backpack.getUniqueId().toString() + "} | Slot:{" + backpack.getSlots() + "} ");
+            backpackInfoList.add("Name:{" + backpack.getName() + "} | UUID:{" + backpack.getUniqueId().toString() + "} | Slot:{" + backpack.getSlots() + "} ");
         }
         commandSender.sendMessage(ColorTool.color(String.format("&3&m-----------------------%s&3&m---------------------------", bindID)));
-        for (final String message : list) {
+        for (final String message : backpackInfoList) {
             commandSender.sendMessage(message);
         }
         commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
-        return false;
+        return true;
     }
 
     private List<Backpack> findOfflinePlayerBackpacks(String bindID) {

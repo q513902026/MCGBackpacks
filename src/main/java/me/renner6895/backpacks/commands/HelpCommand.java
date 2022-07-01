@@ -14,54 +14,54 @@ import java.util.List;
  */
 public class HelpCommand extends HopeCommand {
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length == 0) {
-            final List<String> list2 = new ArrayList<>();
-            list2.add(ColorTool.color("&3&m----------------------&3[&bBackpacks&3]&m---------------------"));
-            list2.add(ColorTool.color("&3This plugin is maintained and developed by TheRealJeremy."));
-            list2.add(ColorTool.color("&3Modified By HopeAsd , Color_yr."));
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if (args.length == 0) {
+            final List<String> backpackHelpTextList = new ArrayList<>();
+            backpackHelpTextList.add(ColorTool.color("&3&m----------------------&3[&bBackpacks&3]&m---------------------"));
+            backpackHelpTextList.add(ColorTool.color("&3This plugin is maintained and developed by TheRealJeremy."));
+            backpackHelpTextList.add(ColorTool.color("&3Modified By HopeAsd , Color_yr."));
             if (commandSender.hasPermission("backpacks.edit.rename")) {
-                list2.add(ColorTool.color("&3/backpack rename {name}"));
-                list2.add(ColorTool.color("&7/backpack help rename"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack rename {name}"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help rename"));
             }
             if (commandSender.hasPermission("backpacks.edit.reslot")) {
-                list2.add(ColorTool.color("&3/backpack reslot {int}"));
-                list2.add(ColorTool.color("&7/backpack help reslot"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack reslot {int}"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help reslot"));
             }
             if (commandSender.hasPermission("backpacks.edit.clone")) {
-                list2.add(ColorTool.color("&3/backpack clone"));
-                list2.add(ColorTool.color("&7/backpack help clone"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack clone"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help clone"));
             }
             if (commandSender.hasPermission("backpacks.admin.create")) {
-                list2.add(ColorTool.color("&3/backpack create <slots> <name> <item>"));
-                list2.add(ColorTool.color("&7/backpack help create"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack create <slots> <name> <item>"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help create"));
             }
             if (commandSender.hasPermission("backpacks.admin.give")) {
-                list2.add(ColorTool.color("&3/backpack give {player} <slots> <name> <item>"));
-                list2.add(ColorTool.color("&7/backpack help give"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack give {player} <slots> <name> <item>"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help give"));
             }
             if (commandSender.hasPermission("backpacks.admin.viewall")) {
-                list2.add(ColorTool.color("&3/backpack viewall <page>"));
-                list2.add(ColorTool.color("&7/backpack help viewall"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack viewall <page>"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help viewall"));
             }
             if (commandSender.hasPermission("backpacks.admin.find")) {
-                list2.add(ColorTool.color("&3/backpack find {player}"));
-                list2.add(ColorTool.color("&7/backpack help find"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack find {player}"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help find"));
             }
             if (commandSender.hasPermission("backpacks.admin.view")) {
-                list2.add(ColorTool.color("&3/backpack view {player} <page>"));
-                list2.add(ColorTool.color("&7/backpack help view"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack view {player} <page>"));
+                backpackHelpTextList.add(ColorTool.color("&7/backpack help view"));
             }
             if (commandSender instanceof ConsoleCommandSender) {
-                list2.add(ColorTool.color("&3/backpack rebuildCache"));
+                backpackHelpTextList.add(ColorTool.color("&3/backpack rebuildCache"));
             }
-            list2.add(ColorTool.color("&3&m-----------------------------------------------------"));
-            for (final String s1 : list2) {
+            backpackHelpTextList.add(ColorTool.color("&3&m-----------------------------------------------------"));
+            for (final String s1 : backpackHelpTextList) {
                 commandSender.sendMessage(s1);
             }
             return true;
         }
-        if (strings[1].equalsIgnoreCase("rename")) {
+        if (args[1].equalsIgnoreCase("rename")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpacks rename {name}"));
             commandSender.sendMessage(ColorTool.color("&7- Rename a backpack you are holding in your hand!"));
@@ -69,7 +69,7 @@ public class HelpCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
-        if (strings[1].equalsIgnoreCase("reslot")) {
+        if (args[1].equalsIgnoreCase("reslot")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpacks reslot {int}"));
             commandSender.sendMessage(ColorTool.color("&7- Change the slots of a backpack you are holding in your hand!"));
@@ -77,7 +77,7 @@ public class HelpCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
-        if (strings[1].equalsIgnoreCase("clone")) {
+        if (args[1].equalsIgnoreCase("clone")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpacks clone"));
             commandSender.sendMessage(ColorTool.color("&7- Creates an extra copy of the backpack!"));
@@ -85,7 +85,7 @@ public class HelpCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
-        if (strings[1].equalsIgnoreCase("create")) {
+        if (args[1].equalsIgnoreCase("create")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpack create <slots> <name> <item>"));
             commandSender.sendMessage(ColorTool.color("&7- Create a backpack for yourself!"));
@@ -97,7 +97,7 @@ public class HelpCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
-        if (strings[1].equalsIgnoreCase("give")) {
+        if (args[1].equalsIgnoreCase("give")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpack give {player} <slots> <name> <item>"));
             commandSender.sendMessage(ColorTool.color("&7- Give a backpack to someone!"));
@@ -110,7 +110,7 @@ public class HelpCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
-        if (strings[1].equalsIgnoreCase("find")) {
+        if (args[1].equalsIgnoreCase("find")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpack find {player}"));
             commandSender.sendMessage(ColorTool.color("&7- find player backpacks List!"));
@@ -119,7 +119,7 @@ public class HelpCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
-        if (strings[1].equalsIgnoreCase("view")) {
+        if (args[1].equalsIgnoreCase("view")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpacks view {player} <page>"));
             commandSender.sendMessage(ColorTool.color("&7- View player the backpacks on the server!"));
@@ -128,11 +128,21 @@ public class HelpCommand extends HopeCommand {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
-        if (strings[1].equalsIgnoreCase("viewall")) {
+        if (args[1].equalsIgnoreCase("viewall")) {
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             commandSender.sendMessage(ColorTool.color("&3/backpacks viewall <page>"));
             commandSender.sendMessage(ColorTool.color("&7- View all the backpacks on the server!"));
             commandSender.sendMessage(ColorTool.color("&7- Click on a backpack to receive a copy of it."));
+            commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
+            return true;
+        }
+        if (args[1].equalsIgnoreCase("rebind")) {
+            commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
+            commandSender.sendMessage(ColorTool.color("&3/backpacks rebind <backpackItem> {bindPlayer} <ignoreCheckPlayerOnline>"));
+            commandSender.sendMessage(ColorTool.color("&7- 把背包重新绑定到其他玩家."));
+            commandSender.sendMessage(ColorTool.color("&7- 背包物品默认获取主手手持物品进行判断 如果没有背包物品 请输入背包的UUID."));
+            commandSender.sendMessage(ColorTool.color("&7- 当参数 ignoreCheckPlayerOnline 为真时 会不检查玩家是否在线 而直接绑定."));
+            commandSender.sendMessage(ColorTool.color("&7- 当参数 ignoreCheckPlayerOnline 仅在参数长度为3时生效."));
             commandSender.sendMessage(ColorTool.color("&3&m-----------------------------------------------------"));
             return true;
         }
