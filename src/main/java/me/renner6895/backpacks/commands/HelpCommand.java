@@ -15,7 +15,7 @@ import java.util.List;
 public class HelpCommand extends HopeCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length <= 1) {
+        if (strings.length == 0) {
             final List<String> list2 = new ArrayList<>();
             list2.add(ColorTool.color("&3&m----------------------&3[&bBackpacks&3]&m---------------------"));
             list2.add(ColorTool.color("&3This plugin is maintained and developed by TheRealJeremy."));

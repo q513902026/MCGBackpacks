@@ -19,7 +19,7 @@ public class GiveCommand extends HopeCommand {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length < 2) {
+        if (strings.length < 1) {
             commandSender.sendMessage(ColorTool.color(plugin.getPrefix() + FormatTool.getFormatText("give.error", "&cError: For information on how to use this command, type /backpacks help give")));
             return false;
         }

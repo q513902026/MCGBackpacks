@@ -38,7 +38,7 @@ public class Backpack {
     private Inventory inventory;
     private FileConfiguration fileConfig;
     private boolean isAdminBackpack;
-
+    private boolean load = false;
     public Backpack(final File file) {
         this.file = file;
         this.Backpack_ID = UUID.fromString(this.file.getName().substring(0, this.file.getName().length() - 4));
@@ -59,7 +59,17 @@ public class Backpack {
             Main.log.warning(this.file.getName() + "载入时发生了错误,可能是错误的保存物品导致的");
         }
     }
-
+    public void rebind(String bindName){
+        load();
+        if (this.isAdminBackpack){
+            Main.log.warning("背包<"+this.Backpack_ID.toString()+">正在从管理员背包重新绑定为个人背包,绑定对象:"+bindName);
+        }
+        this.User_ID = bindName;
+        if (backPackCache.hasBackpackCache(this.Backpack_ID.toString())){
+            backPackCache.cacheBackpackInfo(this.Backpack_ID.toString(),bindName);
+        }
+        updateBackpack();
+    }
     private void loadInv(ConfigurationSection fileConfig) {
         this.inventory = Bukkit.createInventory(new BackpackHolder(this.Backpack_ID), 54, getRawName());
         try {
@@ -74,14 +84,15 @@ public class Backpack {
     }
 
     public void load() {
-        if (inventory == null) {
+        if (!load) {
             initialize();
             loadInv(getFileConfig());
+            load = true;
         }
     }
 
     public boolean isInit() {
-        return inventory != null;
+        return load;
     }
 
     public void clearViewers() {
@@ -103,7 +114,8 @@ public class Backpack {
     public void updateBackpack() {
         this.saveBackpack();
         this.clearViewers();
-        this.initialize();
+        this.load = false;
+        this.load();
     }
     public static boolean isOwner(Backpack backpack,String name){
         if(backpack.getBindID() == null){
@@ -121,6 +133,7 @@ public class Backpack {
             final FileConfiguration fileConfig = getFileConfig();
             fileConfig.set("name", this.name);
             fileConfig.set("slots", this.getSlots());
+            fileConfig.set("bind-id",this.getBindID());
             InvUtil.saveInventory(this.inventory, fileConfig, this.getSlots());
             try {
                 fileConfig.save(this.file);

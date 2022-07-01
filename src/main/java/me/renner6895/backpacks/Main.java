@@ -21,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -202,6 +203,7 @@ public class Main extends JavaPlugin {
         adminCommand.registerCommand("reslot", injector.getSingleton(ReslotCommand.class));
         adminCommand.registerCommand("find", injector.getSingleton(FindCommand.class));
         adminCommand.registerCommand("view", injector.getSingleton(ViewCommand.class));
+        adminCommand.registerCommand("rebind",injector.getSingleton(ReBindCommand.class));
         adminCommand.registerCommand("rebuildCache", injector.getSingleton(RebuildCacheCommand.class));
         adminCommand.registerCommand("viewall", injector.getSingleton(ViewAllCommand.class));
         adminCommand.registerCommand("help", injector.getSingleton(HelpCommand.class));
@@ -283,5 +285,12 @@ public class Main extends JavaPlugin {
         adminCommand = injector.register(PluginCommandMap.class, new PluginCommandMap(this));
 
         backPackCache = injector.register(BackPackCache.class,new BackPackCache());
+    }
+    public Optional<Backpack> getBackpackByItem(ItemStack stack){
+        if (this.itemIsBackpack(stack)){
+            final String backpackId = this.nmsUtil.getStringTag(stack, "backpack-item");
+            return Optional.of(getBackpack(UUID.fromString(backpackId)));
+        }
+        return Optional.empty();
     }
 }

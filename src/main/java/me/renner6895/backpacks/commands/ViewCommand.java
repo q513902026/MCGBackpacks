@@ -27,7 +27,7 @@ public class ViewCommand extends HopeCommand {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length < 2) {
+        if (strings.length < 1) {
             commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + FormatTool.getFormatText("view.error", "&cError: You must be a player name use this command.")));
             return false;
         }
