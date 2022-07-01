@@ -19,6 +19,7 @@ import java.util.List;
 public class InvUtil {
     @Inject
     private static Main plugin;
+
     public static String saveInventory(final Inventory inventory) {
         final YamlConfiguration config = new YamlConfiguration();
         saveInventory(inventory, config, inventory.getSize());
@@ -28,7 +29,7 @@ public class InvUtil {
     private static String getNBTString(ItemStack item) {
         if (item != null) {
             NBTTagCompound nbt = (NBTTagCompound) plugin.getNmsUtil().getTag(item);
-            if (nbt != null &&nbt.hasKey("BlockEntityTag")) {
+            if (nbt != null && nbt.hasKey("BlockEntityTag")) {
                 nbt = nbt.getCompound("BlockEntityTag");
                 try {
                     ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -47,7 +48,7 @@ public class InvUtil {
             try {
                 ByteArrayInputStream buf = new ByteArrayInputStream(Base64.decodeBase64(nbt));
                 NBTTagCompound nbtc = NBTCompressedStreamTools.a(buf);
-                item = plugin.getNmsUtil().setTag(item, "BlockEntityTag",nbtc);
+                item = plugin.getNmsUtil().setTag(item, "BlockEntityTag", nbtc);
                 return item;
             } catch (IOException ex) {
 
@@ -84,9 +85,9 @@ public class InvUtil {
                 }
                 ItemStack item = source.getItemStack(key);
                 /**
-                String nbtstr = source.getString(key+"BlockEntityTag");
-                item = setNBTString(nbtstr, item);
-                **/
+                 String nbtstr = source.getString(key+"BlockEntityTag");
+                 item = setNBTString(nbtstr, item);
+                 **/
                 stacks.set(number, item);
             }
         } catch (NumberFormatException var4) {

@@ -18,6 +18,7 @@
     <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.5-SNAPSHOT.jar!/me/hope/core/inject/annotation/CommandAlias.class" charset="UTF-16BE" />
     <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.6-SNAPSHOT.jar!/me/hope/core/CommandType.class" charset="UTF-16LE" />
     <file url="jar://$PROJECT_DIR$/libs/HopeCore-1.0.6-SNAPSHOT.jar!/me/hope/core/inject/annotation/command/CommandPermission.class" charset="UTF-16BE" />
+    <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/Server.class" charset="UTF-16LE" />
     <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/command/ConsoleCommandSender.class" charset="GBK" />
     <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/configuration/MemoryConfiguration.class" charset="UTF-16LE" />
     <file url="jar://$PROJECT_DIR$/libs/spigot-1.12.2.jar!/org/bukkit/configuration/MemorySection.class" charset="UTF-16LE" />

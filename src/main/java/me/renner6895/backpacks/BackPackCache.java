@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -24,30 +25,32 @@ public class BackPackCache {
     /**
      * 缓存存储位置
      **/
-    private  File backpackCacheFile;
+    private File backpackCacheFile;
 
     /**
      * 背包缓存
      */
     private FileConfiguration cache;
 
-    private Map<UUID, Backpack> backpackMap;
-    public BackPackCache(){
+    private final Map<UUID, Backpack> backpackMap;
+
+    public BackPackCache() {
         backpackMap = Maps.newHashMap();
 
     }
 
     public void linkYamlFileToMap() {
         register();
-        for (File file: new File(plugin.getDataFolder()+File.separator + "backpacks").listFiles(new YamlFileFilter())){
+        for (File file : Objects.requireNonNull(new File(plugin.getDataFolder() + File.separator + "backpacks").listFiles(new YamlFileFilter()))) {
             Backpack bp = new Backpack(file);
-            this.backpackMap.put(bp.getUniqueId(),bp);
+            this.backpackMap.put(bp.getUniqueId(), bp);
         }
     }
 
-    public Map<UUID,Backpack> getBackpackMap(){
+    public Map<UUID, Backpack> getBackpackMap() {
         return backpackMap;
     }
+
     /**
      * 重载缓存流
      */
@@ -63,7 +66,7 @@ public class BackPackCache {
      * 必须在registerBackpack之前运行
      * 用于加载存储的背包拥有者信息
      */
-     public void register() {
+    public void register() {
         backpackCacheFile = new File(plugin.getDataFolder(), "cache.yml");
         if (cache == null) {
             log.info("加载 背包缓存 ...");
@@ -120,7 +123,7 @@ public class BackPackCache {
         return cache.contains(UUID);
     }
 
-    static class YamlFileFilter implements FilenameFilter{
+    static class YamlFileFilter implements FilenameFilter {
         @Override
         public boolean accept(File dir, String name) {
             return name.endsWith(".yml");

@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author xiaoyv_404
  */
-@CommandPermission(value = "backpacks.admin.view",type = CommandType.PLAYER)
+@CommandPermission(value = "backpacks.admin.view", type = CommandType.PLAYER)
 public class ViewCommand extends HopeCommand {
 
     Main plugin = getPlugin();

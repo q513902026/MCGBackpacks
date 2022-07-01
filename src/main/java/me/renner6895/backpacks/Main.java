@@ -152,6 +152,7 @@ public class Main extends JavaPlugin {
             backpacksFolder.mkdirs();
         }
     }
+
     private void registerConfig() {
         if (this.getConfig().get("restore-defaults") == null || this.getConfig().getBoolean("restore-defaults")) {
             this.getConfig().set("restore-defaults", false);
@@ -204,11 +205,11 @@ public class Main extends JavaPlugin {
         adminCommand.registerCommand("reslot", injector.getSingleton(ReslotCommand.class));
         adminCommand.registerCommand("find", injector.getSingleton(FindCommand.class));
         adminCommand.registerCommand("view", injector.getSingleton(ViewCommand.class));
-        adminCommand.registerCommand("rebind",injector.getSingleton(ReBindCommand.class));
+        adminCommand.registerCommand("rebind", injector.getSingleton(ReBindCommand.class));
         adminCommand.registerCommand("rebuildCache", injector.getSingleton(RebuildCacheCommand.class));
         adminCommand.registerCommand("viewall", injector.getSingleton(ViewAllCommand.class));
         adminCommand.registerCommand("help", injector.getSingleton(HelpCommand.class));
-        adminCommand.registerCommand("info",injector.getSingleton(InfoCommand.class));
+        adminCommand.registerCommand("info", injector.getSingleton(InfoCommand.class));
 
         this.getCommand("backpacks").setExecutor(adminCommand);
     }
@@ -281,24 +282,26 @@ public class Main extends JavaPlugin {
     private void registerBeans() {
         injector = new InjectorBuilder().setPlugin(this).setDefaultPath("me.renner6895.backpacks").build();
 
-        injector.register(Main.class,this);
+        injector.register(Main.class, this);
         log = injector.register(Logger.class, this.getLogger());
 
         adminCommand = injector.register(PluginCommandMap.class, new PluginCommandMap<>(this));
 
-        backPackCache = injector.register(BackPackCache.class,new BackPackCache());
+        backPackCache = injector.register(BackPackCache.class, new BackPackCache());
     }
-    public Optional<Backpack> getBackpackByItem(ItemStack stack){
-        if (this.itemIsBackpack(stack)){
+
+    public Optional<Backpack> getBackpackByItem(ItemStack stack) {
+        if (this.itemIsBackpack(stack)) {
             final String backpackId = this.nmsUtil.getStringTag(stack, "backpack-item");
             return Optional.of(getBackpack(UUID.fromString(backpackId)));
         }
         return Optional.empty();
     }
-    public Optional<Backpack> getBackpackByUUIDString(String UUIDString){
-        try{
+
+    public Optional<Backpack> getBackpackByUUIDString(String UUIDString) {
+        try {
             return Optional.of(getBackpack(UUID.fromString(UUIDString)));
-        }catch (IllegalArgumentException exception){
+        } catch (IllegalArgumentException exception) {
             log.warning("错误的UUID格式");
         }
         return Optional.empty();

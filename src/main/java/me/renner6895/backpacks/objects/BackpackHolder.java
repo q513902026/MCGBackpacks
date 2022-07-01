@@ -10,12 +10,12 @@ import java.util.UUID;
 public class BackpackHolder implements InventoryHolder {
     @Inject
     private static Main plugin;
-    private final UUID backpack_id;
+    private final UUID backpackId;
     private boolean isViewAll;
 
-    public BackpackHolder(final UUID backpack_id) {
+    public BackpackHolder(final UUID backpackId) {
         this.isViewAll = false;
-        this.backpack_id = backpack_id;
+        this.backpackId = backpackId;
     }
 
     public BackpackHolder setViewMenu(final boolean isViewAll) {
@@ -24,7 +24,7 @@ public class BackpackHolder implements InventoryHolder {
     }
 
     public UUID getBackpack_id() {
-        return this.backpack_id;
+        return this.backpackId;
     }
 
     public boolean isViewAll() {
@@ -32,6 +32,6 @@ public class BackpackHolder implements InventoryHolder {
     }
 
     public Inventory getInventory() {
-        return plugin.getBackpack(this.backpack_id).getPackInventory();
+        return plugin.getBackpack(this.backpackId).getPackInventory();
     }
 }

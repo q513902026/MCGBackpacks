@@ -15,14 +15,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.TreeMap;
 
 /**
  * @author xiaoyv_404
  */
-@CommandPermission(value = "backpacks.admin.viewall",type = CommandType.PLAYER)
+@CommandPermission(value = "backpacks.admin.viewall", type = CommandType.PLAYER)
 public class ViewAllCommand extends HopeCommand {
 
     Main plugin = getPlugin();
@@ -45,14 +44,15 @@ public class ViewAllCommand extends HopeCommand {
         if (strings.length > 1) {
             try {
                 page = Integer.parseInt(strings[1]);
-            } catch (NumberFormatException ex2) {
+            } catch (NumberFormatException ignored) {
+                //null
             }
         }
         final Inventory inv2 = Bukkit.createInventory(new BackpackHolder(null).setViewMenu(true), 54, ColorTool.color(String.format(FormatTool.getFormatText("viewall.succuse", "Backpacks - &4Viewing All &8page %s"), page)));
         int counter2 = 0;
         for (final Backpack backpack : this.orderedBackpackMap.values()) {
             if (counter2 >= (page - 1) * 54 && counter2 < page * 54) {
-                inv2.addItem(new ItemStack[]{backpack.getItem()});
+                inv2.addItem(backpack.getItem());
             }
             if (++counter2 >= page * 54) {
                 break;

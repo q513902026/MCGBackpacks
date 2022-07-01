@@ -23,28 +23,16 @@ R
 ".idea/modules/MCGBackpack.test.iml,8\6\86b818cfb62cfb860c517602e42421a1087c3eab
 M
 .idea/modules/MCGBackpack.iml,b\0\b000e221c7eef107b0c4e3bf93123b13d436197b
-b
-2src/main/java/me/renner6895/backpacks/InvUtil.java,f\3\f3aa13e548266b78bf440899b92956edc382b1e1
-`
-0src/main/java/me/therealjeremy/jmp/JMetrics.java,c\b\cb09c973996ec3d3a117e022f67676fa48d4dec4
 _
 /src/main/java/me/renner6895/nmstag/NMSUtil.java,a\2\a2e10fdefa74f81fe82c8d7e5d2abde1c451371d
 9
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
-o
-?src/main/java/me/renner6895/backpacks/objects/PluginPlayer.java,4\b\4b107eb76be8b5deb55a582e34675501ccf45b47
-q
-Asrc/main/java/me/renner6895/backpacks/events/JoinLeaveEvents.java,0\b\0b4cc81ff4d194ee8ed214110693d44ffa43d696
 k
 ;src/main/java/me/renner6895/backpacks/commands/TestCMD.java,8\7\87e8b596599858cab30537ddd3bc751e311f8100
 }
 Msrc/main/java/me/renner6895/backpacks/commands/abstractclass/HopeCommand.java,1\b\1be5b1d3f0af8c5ae6eac3a13ed6af966d995865
 o
 ?src/main/java/me/renner6895/backpacks/commands/HelpCommand.java,8\c\8c1c67311479d78beae1e5897a05cd1fadf3ada0
-k
-;src/main/java/me/renner6895/backpacks/tools/FormatTool.java,e\2\e2ebea57460f06ec85c523c03fcb718f1debd1fc
-j
-:src/main/java/me/renner6895/backpacks/tools/ColorTool.java,a\9\a9e898073d1d0ab0214cf2c3c9a94317d9d807fd
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 ?

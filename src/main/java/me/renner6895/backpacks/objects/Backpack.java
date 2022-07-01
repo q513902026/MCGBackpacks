@@ -39,6 +39,7 @@ public class Backpack {
     private FileConfiguration fileConfig;
     private boolean isAdminBackpack;
     private boolean load = false;
+
     public Backpack(final File file) {
         this.file = file;
         this.Backpack_ID = UUID.fromString(this.file.getName().substring(0, this.file.getName().length() - 4));
@@ -59,17 +60,19 @@ public class Backpack {
             Main.log.warning(this.file.getName() + "载入时发生了错误,可能是错误的保存物品导致的");
         }
     }
-    public void rebind(String bindName){
+
+    public void rebind(String bindName) {
         load();
-        if (this.isAdminBackpack){
-            Main.log.warning("背包<"+this.Backpack_ID.toString()+">正在从管理员背包重新绑定为个人背包,绑定对象:"+bindName);
+        if (this.isAdminBackpack) {
+            Main.log.warning("背包<" + this.Backpack_ID.toString() + ">正在从管理员背包重新绑定为个人背包,绑定对象:" + bindName);
         }
         this.User_ID = bindName;
-        if (backPackCache.hasBackpackCache(this.Backpack_ID.toString())){
-            backPackCache.cacheBackpackInfo(this.Backpack_ID.toString(),bindName);
+        if (backPackCache.hasBackpackCache(this.Backpack_ID.toString())) {
+            backPackCache.cacheBackpackInfo(this.Backpack_ID.toString(), bindName);
         }
         updateBackpack();
     }
+
     private void loadInv(ConfigurationSection fileConfig) {
         this.inventory = Bukkit.createInventory(new BackpackHolder(this.Backpack_ID), 54, getRawName());
         try {
@@ -105,24 +108,28 @@ public class Backpack {
             }
         }
     }
-    public boolean hasViewer(){
-        if(isInit()){
+
+    public boolean hasViewer() {
+        if (isInit()) {
             return !this.getInventory().getViewers().isEmpty();
         }
         return false;
     }
+
     public void updateBackpack() {
         this.saveBackpack();
         this.clearViewers();
         this.load = false;
         this.load();
     }
-    public static boolean isOwner(Backpack backpack,String name){
-        if(backpack.getBindID() == null){
+
+    public static boolean isOwner(Backpack backpack, String name) {
+        if (backpack.getBindID() == null) {
             return false;
         }
         return backpack.getBindID().equals(name);
     }
+
     public Inventory getPackInventory() {
         return this.inventory;
     }
@@ -133,7 +140,7 @@ public class Backpack {
             final FileConfiguration fileConfig = getFileConfig();
             fileConfig.set("name", this.name);
             fileConfig.set("slots", this.getSlots());
-            fileConfig.set("bind-id",this.getBindID());
+            fileConfig.set("bind-id", this.getBindID());
             InvUtil.saveInventory(this.inventory, fileConfig, this.getSlots());
             try {
                 fileConfig.save(this.file);
@@ -165,7 +172,7 @@ public class Backpack {
         item.setItemMeta(itemMeta);
         item = plugin.getNmsUtil().setStringTag(item, "backpack-item", this.getUniqueId().toString());
 
-        if (this.getBindID() == null){
+        if (this.getBindID() == null) {
             return item;
         }
 
@@ -178,7 +185,7 @@ public class Backpack {
     }
 
     public String getName() {
-        return ChatColor.translateAlternateColorCodes('&',this.getRawName());
+        return ChatColor.translateAlternateColorCodes('&', this.getRawName());
     }
 
     public void updateName(final String name) {
@@ -205,7 +212,7 @@ public class Backpack {
     }
 
     public int getSlots() {
-        if(this.slots  == 0){
+        if (this.slots == 0) {
             final FileConfiguration fileConfig = getFileConfig();
             this.slots = ((fileConfig.get("slots") == null) ? Main.defaultSlots : fileConfig.getInt("slots"));
         }
@@ -228,7 +235,7 @@ public class Backpack {
     }
 
     private String getRawName() {
-        if (!isInit()){
+        if (!isInit()) {
             final FileConfiguration fileConfig = getFileConfig();
             this.name = ((fileConfig.get("name") == null) ? Main.defaultName : fileConfig.getString("name"));
         }
@@ -248,13 +255,13 @@ public class Backpack {
     }
 
     public String getBindID() {
-        if (backPackCache.hasBackpackCache(this.Backpack_ID.toString())){
+        if (backPackCache.hasBackpackCache(this.Backpack_ID.toString())) {
             return backPackCache.getBackpackBindCache(this.Backpack_ID.toString());
         }
         if (this.User_ID == null && !this.isAdminBackpack) {
             final FileConfiguration fileConfig = getFileConfig();
             this.User_ID = fileConfig.getString("bind-id");
-            if (this.User_ID == null){
+            if (this.User_ID == null) {
                 this.isAdminBackpack = true;
                 return null;
             }
@@ -262,14 +269,16 @@ public class Backpack {
         }
         return this.User_ID;
     }
-    public FileConfiguration getFileConfig(){
+
+    public FileConfiguration getFileConfig() {
         return getFileConfig(false);
     }
-    public FileConfiguration getFileConfig(boolean reload){
-        if (reload){
+
+    public FileConfiguration getFileConfig(boolean reload) {
+        if (reload) {
             fileConfig = YamlConfiguration.loadConfiguration(this.file);
-        }else{
-            if (fileConfig == null){
+        } else {
+            if (fileConfig == null) {
                 fileConfig = getFileConfig(true);
             }
         }
