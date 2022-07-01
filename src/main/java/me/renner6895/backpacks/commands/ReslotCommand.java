@@ -19,7 +19,7 @@ import java.util.UUID;
  * @author xiaoyv_404
  * todo 修改为onlyPlayer
  */
-@CommandPermission(value = "backpacks.edit.reslot",type = CommandType.PLAYER)
+@CommandPermission(value = "backpacks.edit.reslot", type = CommandType.PLAYER)
 public class ReslotCommand extends HopeCommand {
 
     Main plugin = getPlugin();

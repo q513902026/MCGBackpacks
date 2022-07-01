@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,12 +87,12 @@ public class CreateCommand extends HopeCommand {
         final PluginPlayer pluginPlayer = getPlugin().getPluginPlayer(id);
         getPlugin().registerBackpack(backpack);
         pluginPlayer.addBackpack(backpack);
-        player.getInventory().addItem(new ItemStack[]{backpack.getItem()});
+        player.getInventory().addItem(backpack.getItem());
         player.sendMessage(ColorTool.color(getPlugin().getPrefix() + getFormatText()));
     }
 
     private static String getFormatText() {
-        return getPlugin().getConfig().getString("lang.backpack.give","&7You were given a new Backpack!");
+        return getPlugin().getConfig().getString("lang.backpack.give", "&7You were given a new Backpack!");
     }
 
 }

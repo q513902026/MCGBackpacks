@@ -1,5 +1,6 @@
 package me.renner6895.backpacks.commands;
 
+import me.hope.core.inject.annotation.Inject;
 import me.hope.core.inject.annotation.command.CommandPermission;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
@@ -15,7 +16,8 @@ import org.bukkit.entity.Player;
  */
 @CommandPermission("backpacks.admin.give")
 public class GiveCommand extends HopeCommand {
-    Main plugin = getPlugin();
+    @Inject
+    private static Main plugin;
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
@@ -25,11 +27,11 @@ public class GiveCommand extends HopeCommand {
         }
         final Player player = Bukkit.getPlayer(args[0]);
         if (player == null) {
-            commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.error2", "&7The player %s is not online"), args[0])));
+            commandSender.sendMessage(ColorTool.color(plugin.getPrefix() + String.format(FormatTool.getFormatText("give.error2", "&7The player %s is not online"), args[0])));
             return false;
         }
         CreateCommand.createBackpack(player, args);
-        commandSender.sendMessage(ColorTool.color(this.plugin.getPrefix() + String.format(FormatTool.getFormatText("give.succuse", "&7New Backpack given to %s ."), args[0])));
+        commandSender.sendMessage(ColorTool.color(plugin.getPrefix() + String.format(FormatTool.getFormatText("give.succuse", "&7New Backpack given to %s ."), args[0])));
         return true;
     }
 }

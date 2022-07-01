@@ -17,13 +17,13 @@ public class JoinLeaveEvents implements Listener {
     @EventHandler
     public void joinEvent(final PlayerJoinEvent e) {
         final PluginPlayer pluginPlayer = new PluginPlayer(e.getPlayer());
-        this.plugin.registerPlayer(pluginPlayer);
+        plugin.registerPlayer(pluginPlayer);
     }
 
     @EventHandler
     public void leaveEvent(final PlayerQuitEvent e) {
-        final PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(e.getPlayer().getName());
+        final PluginPlayer pluginPlayer = plugin.getPluginPlayer(e.getPlayer().getName());
         pluginPlayer.removal();
-        this.plugin.unregisterPlayer(pluginPlayer);
+        plugin.unregisterPlayer(pluginPlayer);
     }
 }

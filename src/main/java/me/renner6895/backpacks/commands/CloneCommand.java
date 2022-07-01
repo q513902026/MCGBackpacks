@@ -1,6 +1,7 @@
 package me.renner6895.backpacks.commands;
 
 import me.hope.core.CommandType;
+import me.hope.core.inject.annotation.Inject;
 import me.hope.core.inject.annotation.command.CommandPermission;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.commands.abstractclass.HopeCommand;
@@ -13,9 +14,10 @@ import org.bukkit.entity.Player;
 /**
  * @author xiaoyv_404
  */
-@CommandPermission(value = "backpacks.edit.clone",type = CommandType.PLAYER)
+@CommandPermission(value = "backpacks.edit.clone", type = CommandType.PLAYER)
 public class CloneCommand extends HopeCommand {
-    Main plugin = getPlugin();
+    @Inject
+    private static Main plugin;
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {

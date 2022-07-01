@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * @author xiaoyv_404
  */
-@CommandPermission(value = "backpacks.edit.rename",type = CommandType.PLAYER)
+@CommandPermission(value = "backpacks.edit.rename", type = CommandType.PLAYER)
 public class RenameCommand extends HopeCommand {
 
     Main plugin = getPlugin();
