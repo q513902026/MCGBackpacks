@@ -33,9 +33,11 @@ public class ViewAllCommand extends HopeCommand {
             this.orderedBackpackMap = new TreeMap<>();
             for (final Backpack bp2 : backPackCache.getBackpackMap().values()) {
                 double d2 = bp2.getSlots();
+                //noinspection StatementWithEmptyBody
                 for (boolean f2 = false; this.orderedBackpackMap.get(d2) != null && !f2; d2 += 0.001) {
-                    this.orderedBackpackMap.put(d2, bp2);
+                    //就是要空的
                 }
+                this.orderedBackpackMap.put(d2, bp2);
             }
         }
         int page = 1;
