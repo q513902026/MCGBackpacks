@@ -23,8 +23,6 @@ import java.util.TreeMap;
  */
 @CommandPermission(value = "backpacks.admin.viewall", type = CommandType.PLAYER)
 public class ViewAllCommand extends HopeCommand {
-
-    Main plugin = getPlugin();
     @Inject
     private static BackPackCache backPackCache;
     private TreeMap<Double, Backpack> orderedBackpackMap;

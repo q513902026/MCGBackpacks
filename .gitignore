@@ -1,5 +1,7 @@
 # ingnore folder
 /build/
+/.idea/
+/.gradle/
 # Compiled Lua sources
 luac.out
 
@@ -43,7 +45,6 @@ luac.out
 
 *.bin
 *.lock
-.gradle/5.2.1/gc.properties
 *.class
 *.jar
 *.iml
