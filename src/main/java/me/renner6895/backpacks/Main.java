@@ -1,16 +1,17 @@
 package me.renner6895.backpacks;
 
+import com.zaxxer.hikari.HikariConfig;
 import me.hope.core.PluginCommandMap;
 import me.hope.core.inject.Injector;
 import me.hope.core.inject.InjectorBuilder;
 import me.renner6895.backpacks.commands.*;
+import me.renner6895.backpacks.database.Database;
 import me.renner6895.backpacks.events.CraftingEvents;
 import me.renner6895.backpacks.events.InventoryEvents;
 import me.renner6895.backpacks.events.JoinLeaveEvents;
 import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.PluginPlayer;
 import me.renner6895.backpacks.objects.SlotFiller;
-import me.renner6895.backpacks.tools.ColorTool;
 import me.renner6895.nmstag.NMSUtil;
 import me.renner6895.nmstag.NMSUtil_1_12;
 import org.bukkit.Bukkit;
@@ -20,6 +21,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -56,6 +59,7 @@ public class Main extends JavaPlugin {
     public static int defaultSlots;
     public static int defaultItemId;
     public static short defaultItemData;
+    public static Connection db;
 
     public Main() {
     }
@@ -81,6 +85,7 @@ public class Main extends JavaPlugin {
         for (final PluginPlayer pluginPlayer : this.playerMap.values()) {
             pluginPlayer.removal();
         }
+        this.unregisterSQL();
     }
 
     @Override
@@ -102,6 +107,7 @@ public class Main extends JavaPlugin {
         this.registerCommands();
         long lastTime = System.currentTimeMillis();
         this.registerBackpacks();
+        this.registerSQL();
         log.info("Register Backpacks Time-Consuming: " + (System.currentTimeMillis() - lastTime) + " ms");
         this.registerPlayers();
 
@@ -165,6 +171,10 @@ public class Main extends JavaPlugin {
             this.getConfig().set("slot-filler.item-id", 160);
             this.getConfig().set("slot-filler.item-data", 15);
             this.getConfig().set("slot-filler.name", "&cNo Access");
+            this.getConfig().set("sql.address", "127.0.0.1");
+            this.getConfig().set("sql.table", "mcgBackPack");
+            this.getConfig().set("sql.user", "root");
+            this.getConfig().set("sql.password", "pass");
             this.registerLang();
         }
         this.saveConfig();
@@ -246,6 +256,22 @@ public class Main extends JavaPlugin {
 
     public void unregisterBackpack(final Backpack backpack) {
         backPackCache.getBackpackMap().remove(backpack.getUniqueId());
+    }
+
+    public void registerSQL() {
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl("jdbc:mysql://" + this.getConfig().getString("sql.address") + "/" + this.getConfig().getString("sql.table"));
+        hikariConfig.setUsername(this.getConfig().getString("sql.user"));
+        hikariConfig.setPassword(this.getConfig().getString("sql.password"));
+        db = new Database().connect(hikariConfig);
+    }
+
+    public void unregisterSQL() {
+        try {
+            db.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public PluginPlayer getPluginPlayer(final String id) {
