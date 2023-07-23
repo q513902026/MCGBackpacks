@@ -1,5 +1,6 @@
 package me.renner6895.backpacks.events;
 
+import me.hope.core.inject.annotation.Inject;
 import me.renner6895.backpacks.Main;
 import me.renner6895.backpacks.objects.Backpack;
 import me.renner6895.backpacks.objects.BackpackHolder;
@@ -18,48 +19,51 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
 public class InventoryEvents implements Listener {
-    private Main plugin;
+    @Inject
+    private static Main plugin;
 
-    public InventoryEvents(final Main plugin) {
-        this.plugin = plugin;
+    public InventoryEvents() {
+
     }
 
     private boolean checkOwner(final ItemStack item, final Player p) {
-        boolean hasOwner = this.plugin.getNmsUtil().hasKey(item,"backpack-owner");
+        boolean hasOwner = plugin.getNmsUtil().hasKey(item, "backpack-owner");
         boolean isAdmin = (p.hasPermission("backpacks.admin.viewall") | p.hasPermission("backpacks.admin.view"));
-        if (hasOwner){
-            boolean isOwner = p.getName().equals(this.plugin.getNmsUtil().getStringTag(item, "backpack-owner"));
+        if (hasOwner) {
+            boolean isOwner = p.getName().equals(plugin.getNmsUtil().getStringTag(item, "backpack-owner"));
             return (isAdmin || isOwner);
 
-        }else{
+        } else {
             return isAdmin;
         }
     }
-    private ItemStack getItemInHand(Player player,EquipmentSlot hand){
-        switch(hand){
-            case HAND:
-                return player.getInventory().getItemInMainHand();
-            case OFF_HAND:
-                return player.getInventory().getItemInOffHand();
+
+    private ItemStack getItemInHand(Player player, EquipmentSlot hand) {
+        if (hand == EquipmentSlot.HAND) {
+            return player.getInventory().getItemInMainHand();
+        } else if (hand == EquipmentSlot.OFF_HAND) {
+            return player.getInventory().getItemInOffHand();
         }
         return null;
     }
+
     @EventHandler
     public void itemClickEvent(final PlayerInteractEvent e) {
-        if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) ) {
-            final ItemStack item = getItemInHand(e.getPlayer(),e.getHand());
-            if(item == null){return;}
-            if (this.plugin.itemIsBackpack(item)) {
+        if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+            final ItemStack item = getItemInHand(e.getPlayer(), e.getHand());
+            if (item == null) {
+                return;
+            }
+            if (plugin.itemIsBackpack(item)) {
                 e.setCancelled(true);
-                final String backpackId = this.plugin.getNmsUtil().getStringTag(item, "backpack-item");
+                final String backpackId = plugin.getNmsUtil().getStringTag(item, "backpack-item");
                 if (this.checkOwner(item, e.getPlayer())) {
-                    final Backpack backpack = this.plugin.getBackpack(UUID.fromString(backpackId));
-                    final PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(e.getPlayer().getName());
+                    final Backpack backpack = plugin.getBackpack(UUID.fromString(backpackId));
+                    final PluginPlayer pluginPlayer = plugin.getPluginPlayer(e.getPlayer().getName());
                     pluginPlayer.setCurrentBackpack(backpack.getUniqueId());
                     e.getPlayer().openInventory(backpack.getPackInventory());
                 }
@@ -69,16 +73,15 @@ public class InventoryEvents implements Listener {
 
     @EventHandler
     public void inventoryClickEvent(final InventoryClickEvent e) {
-        final PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(e.getWhoClicked().getName());
         if (e.getInventory().getHolder() instanceof BackpackHolder) {
             final BackpackHolder holder = (BackpackHolder) e.getInventory().getHolder();
             if (!holder.isViewAll()) {
                 final ItemStack item = e.getCurrentItem();
-                if (item != null && this.plugin.itemIsBackpack(item)) {
+                if (item != null && plugin.itemIsBackpack(item)) {
                     e.setCancelled(true);
                     return;
                 }
-                final Backpack backpack = this.plugin.getBackpack(holder.getBackpackid());
+                final Backpack backpack = plugin.getBackpack(holder.getBackpack_id());
                 if (e.getClickedInventory() != null && e.getClickedInventory().getType() == InventoryType.CHEST && e.getSlot() >= backpack.getSlots()) {
                     e.setCancelled(true);
                 }
@@ -86,41 +89,35 @@ public class InventoryEvents implements Listener {
         }
         if (ChatColor.stripColor(e.getInventory().getName()).startsWith("Backpacks - Viewing")) {
             e.setCancelled(true);
-            if (this.plugin.itemIsBackpack(e.getCurrentItem())) {
-                e.getWhoClicked().getInventory().addItem(new ItemStack[]{e.getCurrentItem()});
+            if (plugin.itemIsBackpack(e.getCurrentItem())) {
+                e.getWhoClicked().getInventory().addItem(e.getCurrentItem());
             }
         }
     }
 
     @EventHandler
     public void inventoryCloseEvent(final InventoryCloseEvent e) {
-        final PluginPlayer pluginPlayer = this.plugin.getPluginPlayer(e.getPlayer().getName());
+        final PluginPlayer pluginPlayer = plugin.getPluginPlayer(e.getPlayer().getName());
         if (e.getInventory().getHolder() instanceof BackpackHolder) {
             final BackpackHolder holder = (BackpackHolder) e.getInventory().getHolder();
             if (!holder.isViewAll()) {
-                final Backpack backpack = this.plugin.getBackpack(holder.getBackpackid());
-                e.getInventory().forEach(x-> sendBackpackItemStack(x,e.getPlayer()));
-                this.plugin.getServer().getScheduler().runTask((Plugin) this.plugin, (Runnable) new Runnable() {
-                    @Override
-                    public void run() {
-                        pluginPlayer.setCurrentBackpack(null);
-                    }
-                });
+                final Backpack backpack = plugin.getBackpack(holder.getBackpack_id());
+                e.getInventory().forEach(x -> sendBackpackItemStack(x, e.getPlayer()));
+                plugin.getServer().getScheduler().runTask(plugin, () -> pluginPlayer.setCurrentBackpack(null));
                 backpack.saveBackpack();
             }
         }
     }
 
-    private void sendBackpackItemStack(ItemStack item, HumanEntity p){
-        if (this.plugin.itemIsBackpack(item)){
+    private void sendBackpackItemStack(ItemStack item, HumanEntity p) {
+        if (plugin.itemIsBackpack(item)) {
             ItemStack backItem = item.clone();
             item.setAmount(0);
-            if(p.getInventory().firstEmpty() == -1){
+            if (p.getInventory().firstEmpty() == -1) {
                 World world = p.getWorld();
                 final Location loc = p.getLocation().clone();
-                world.dropItem(loc,backItem);
-            }else
-            {
+                world.dropItem(loc, backItem);
+            } else {
                 p.getInventory().addItem(backItem);
             }
         }

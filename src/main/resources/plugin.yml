@@ -1,8 +1,11 @@
 name: Backpacks
-version: 3.1.10
+version: 3.1.11
 author: renner6895
 main: me.renner6895.backpacks.Main
+depend:
+  - HopeCore
 commands:
-  backpack:
   backpacks:
-  bp:
+    aliases:
+      - bp
+      - backpack

@@ -1,5 +1,6 @@
 package me.renner6895.backpacks.objects;
 
+import me.hope.core.inject.annotation.Inject;
 import me.renner6895.backpacks.Main;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -7,14 +8,14 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.UUID;
 
 public class BackpackHolder implements InventoryHolder {
-    private Main plugin;
-    private UUID backpackid;
+    @Inject
+    private static Main plugin;
+    private final UUID backpackId;
     private boolean isViewAll;
 
-    public BackpackHolder(final Main plugin, final UUID backpackid) {
+    public BackpackHolder(final UUID backpackId) {
         this.isViewAll = false;
-        this.plugin = plugin;
-        this.backpackid = backpackid;
+        this.backpackId = backpackId;
     }
 
     public BackpackHolder setViewMenu(final boolean isViewAll) {
@@ -22,8 +23,8 @@ public class BackpackHolder implements InventoryHolder {
         return this;
     }
 
-    public UUID getBackpackid() {
-        return this.backpackid;
+    public UUID getBackpack_id() {
+        return this.backpackId;
     }
 
     public boolean isViewAll() {
@@ -31,6 +32,6 @@ public class BackpackHolder implements InventoryHolder {
     }
 
     public Inventory getInventory() {
-        return this.plugin.getBackpack(this.backpackid).getPackInventory();
+        return plugin.getBackpack(this.backpackId).getPackInventory();
     }
 }

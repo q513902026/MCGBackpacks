@@ -1,7 +1,7 @@
 plugins {
     id 'java'
 }
-version = "3.1.10"
+version = "3.1.11"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
@@ -9,16 +9,27 @@ compileJava {
 }
 
 repositories {
-    jcenter()
 
+    mavenLocal()
+    mavenCentral()
     maven {
         name 'Spigot'
         url 'https://hub.spigotmc.org/nexus/content/groups/public'
     }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+
+    flatDir { dirs 'libs' }
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compile 'me.hope:HopeCore:1.0.6-SNAPSHOT'
+
     compile fileTree(dir: "libs", include: ['*.jar'])
 }
 
